@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void beginTransactionButtonOnClick(View view) {
-        this.displayFunctionalityNotAvailableDialog();
+        Intent BeginTransaction=new Intent(MainActivity.this,ProductsListingActivity.class);
+        startActivity(BeginTransaction);
     }
 
     public void productSalesReportButtonOnClick(View view) {

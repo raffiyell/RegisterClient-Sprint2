@@ -35,9 +35,9 @@
             android:textAlignment="center" />
 
         <Button
-            android:onClick="searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="searchButton"
             android:text="Search" />
     </LinearLayout>
 
@@ -76,49 +76,15 @@
 
     </LinearLayout>
 
-    <LinearLayout
+
+    <ListView
+        android:id="@+id/list_view_products_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ListView
-            android:id="@+id/list_view_products"
-            android:layout_width="95dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
-
-        <ListView
-            android:id="@+id/list_view_products"
-            android:layout_width="95dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
-
-        <ListView
-            android:id="@+id/list_view_products"
-            android:layout_width="96dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
-
-        <ListView
-            android:id="@+id/list_view_products"
-            android:layout_width="98dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
-
-    </LinearLayout>
-
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
 
 
 </LinearLayout>

@@ -62,7 +62,7 @@ public class ProductsListingActivity extends AppCompatActivity {
 	}
 
 	private ListView getProductsListView() {
-		return (ListView) this.findViewById(R.id.list_view_products);
+		return (ListView) this.findViewById(R.id.list_view_products_id);
 	}
 
 	public void searchButton(View view) {
