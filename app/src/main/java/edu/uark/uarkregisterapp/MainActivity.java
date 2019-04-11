@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createEmployeeButtonOnClick(View view) {
-        this.displayFunctionalityNotAvailableDialog();
+        startActivity(new Intent(getApplicationContext(), CreateEmployeeActivity.class));
+
     }
 
     public void logOutButtonOnClick(View view) {

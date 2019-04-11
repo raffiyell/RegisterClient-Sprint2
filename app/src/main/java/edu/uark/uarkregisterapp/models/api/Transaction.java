@@ -115,6 +115,7 @@ public class Transaction  implements ConvertToJsonInterface, LoadFromJsonInterfa
         return this;
     }
 
+    //todo fix convertToJson() and loadFromJson()
     @Override
     public JSONObject convertToJson() {
         JSONObject jsonObject = new JSONObject();
