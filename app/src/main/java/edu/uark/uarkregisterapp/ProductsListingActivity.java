@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import edu.uark.uarkregisterapp.models.api.services.ProductService;
 import edu.uark.uarkregisterapp.models.transition.ProductTransition;
 
 public class ProductsListingActivity extends AppCompatActivity {
+	EditText searchEditText;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +63,14 @@ public class ProductsListingActivity extends AppCompatActivity {
 
 	private ListView getProductsListView() {
 		return (ListView) this.findViewById(R.id.list_view_products);
+	}
+
+	public void searchButton(View view) {
+		searchEditText = findViewById(R.id.editTextSearchById);
+		String id = searchEditText.getText().toString();
+
+
+
 	}
 
 	private class RetrieveProductsTask extends AsyncTask<Void, Void, ApiResponse<List<Product>>> {
