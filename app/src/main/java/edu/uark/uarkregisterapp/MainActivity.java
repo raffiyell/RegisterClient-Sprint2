@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void beginTransactionButtonOnClick(View view) {
-        Intent BeginTransaction=new Intent(MainActivity.this,ProductsListingActivity.class);
-        startActivity(BeginTransaction);
+        Intent beginTransaction = new Intent (MainActivity.this, ProductsListingActivity.class);
+        startActivity(beginTransaction);
     }
 
     public void productSalesReportButtonOnClick(View view) {
