@@ -1,14 +1,15 @@
 package edu.uark.uarkregisterapp.models.api;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
-import edu.uark.uarkregisterapp.models.api.fields.ProductFieldName;
 import edu.uark.uarkregisterapp.models.api.fields.TransactionEntryFieldName;
 import edu.uark.uarkregisterapp.models.api.interfaces.ConvertToJsonInterface;
 import edu.uark.uarkregisterapp.models.api.interfaces.LoadFromJsonInterface;
@@ -19,39 +20,45 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
     public UUID getRecordId() {
         return recordId;
     }
-    public void setRecordId(UUID recordId) {
+    public TransactionEntry setRecordId(UUID recordId) {
         this.recordId = recordId;
+        return this;
     }
 
     private String productLookupCode;
     public String getLookupCode() {
         return productLookupCode;
     }
-    public void setLookupCode(String productLookupCode) {
+    public TransactionEntry setLookupCode(String productLookupCode) {
         this.productLookupCode = productLookupCode;
+        return this;
     }
 
     private int quantity;
     public int getQuantity() {
         return quantity;
     }
-    public void setQuantity(int quantity) {
+    public TransactionEntry setQuantity(int quantity) {
         this.quantity = quantity;
+        return this;
     }
 
     private double price;
     public double getPrice() {
         return price;
     }
-    public void setPrice(double price) {
+    public TransactionEntry setPrice(double price) {
         this.price = price;
+        return this;
     }
 
-
-    @Override
-    public JSONObject convertToJson() {
-        return null;
-
+    private Date createdOn;
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+    public TransactionEntry setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+        return this;
     }
 
     @Override
@@ -63,16 +70,44 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
 
         this.productLookupCode = rawJsonObject.optString(TransactionEntryFieldName.PRODUCT_LOOKUP_CODE.getFieldName());
         this.quantity = rawJsonObject.optInt(TransactionEntryFieldName.QUANTITY.getFieldName());
+        this.price = rawJsonObject.optDouble(TransactionEntryFieldName.PRICE.getFieldName());
 
-        /**value = rawJsonObject.optString(TransactionEntryFieldName.CREATED_ON.getFieldName());
+        value = rawJsonObject.optString(TransactionEntryFieldName.CREATED_ON.getFieldName());
         if (!StringUtils.isBlank(value)) {
             try {
                 this.createdOn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US).parse(value);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }**/
+        }
 
         return this;
     }
+
+    @Override
+    public JSONObject convertToJson() {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put(TransactionEntryFieldName.RECORD_ID.getFieldName(), this.recordId.toString());
+            jsonObject.put(TransactionEntryFieldName.PRODUCT_LOOKUP_CODE.getFieldName(), this.productLookupCode);
+            jsonObject.put(TransactionEntryFieldName.QUANTITY.getFieldName(), this.quantity);
+            jsonObject.put(TransactionEntryFieldName.PRICE.getFieldName(), this.price);
+            jsonObject.put(TransactionEntryFieldName.CREATED_ON.getFieldName(), this.createdOn);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
+    public TransactionEntry() {
+        this.recordId = new UUID(0, 0);
+        this.createdOn = new Date();
+        this.productLookupCode = StringUtils.EMPTY;
+        this.price = 0.0;
+        this.quantity = 0;
+    }
+
+
 }
