@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import edu.uark.uarkregisterapp.adapters.ProductListAdapter;
@@ -21,6 +23,7 @@ import edu.uark.uarkregisterapp.models.api.ApiResponse;
 import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.api.services.ProductService;
 import edu.uark.uarkregisterapp.models.transition.ProductTransition;
+
 
 public class ProductsListingActivity extends AppCompatActivity {
 	EditText searchEditText;
@@ -67,11 +70,67 @@ public class ProductsListingActivity extends AppCompatActivity {
 
 	public void searchButton(View view) {
 		searchEditText = findViewById(R.id.editTextSearchById);
-		String id = searchEditText.getText().toString();
-
-
-
+		String searchId = searchEditText.getText().toString();
+	//	searchId.addTextChangedListener
+		(new searchingTask(searchId)).execute();
 	}
+
+///////////////////////////////////////// In progress {
+	private class searchingTask extends AsyncTask<Void, Void, ApiResponse<Product>> {
+		 String searchID;
+		@Override
+		protected void onPreExecute() {
+			this.searchingProductsAlert.show();
+		}
+
+		@Override
+		protected ApiResponse<Product> doInBackground(Void... params) {
+			ApiResponse<Product> apiResponse = (new ProductService()).getProductByLookupCode(searchID);
+
+			if (apiResponse.isValidResponse()) {
+				products.clear();
+				products.add(apiResponse.getData());
+			}
+
+			return apiResponse;
+		}
+
+		@Override
+		protected void onPostExecute(ApiResponse<Product> apiResponse) {
+			if (apiResponse.isValidResponse()) {
+				productListAdapter.notifyDataSetChanged();
+			}
+
+			this.searchingProductsAlert.dismiss();
+
+			if (!apiResponse.isValidResponse()) {
+				new AlertDialog.Builder(ProductsListingActivity.this).
+						setMessage("unable to search products").
+						setPositiveButton(
+								R.string.button_dismiss,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int id) {
+										dialog.dismiss();
+									}
+								}
+						).
+						create().
+						show();
+			}
+		}
+
+		private AlertDialog searchingProductsAlert;
+
+		private searchingTask(String id) {
+			 searchID=id;
+			this.searchingProductsAlert = new AlertDialog.Builder(ProductsListingActivity.this).
+					setMessage("searching products").
+					create();
+		}
+	}
+
+//////////////////////////////////////////////// }
+
 
 	private class RetrieveProductsTask extends AsyncTask<Void, Void, ApiResponse<List<Product>>> {
 		@Override
