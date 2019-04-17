@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,164 +26,188 @@ import edu.uark.uarkregisterapp.models.api.services.ProductService;
 import edu.uark.uarkregisterapp.models.transition.ProductTransition;
 
 
-public class ProductsListingActivity extends AppCompatActivity {
-	EditText searchEditText;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_products_listing);
-		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+public class ProductsListingActivity extends AppCompatActivity implements ProductListAdapter.ProductEntryCallback {
+    private EditText searchEditText;
+    private ProductListAdapter.ProductEntryCallback productEntryCallback;
+    private ArrayList<Product> productsInCart;
 
-		ActionBar actionBar = this.getSupportActionBar();
-		if (actionBar != null) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_products_listing);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-		this.products = new ArrayList<>();
-		this.productListAdapter = new ProductListAdapter(this, this.products);
+        ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-		this.getProductsListView().setAdapter(this.productListAdapter);
-		this.getProductsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(getApplicationContext(), ProductViewActivity.class);
+        this.products = new ArrayList<>(); //products in inventory
+        this.productsInCart = new ArrayList<>(); // products added in cart
+        this.productListAdapter = new ProductListAdapter(this, this.products, this); //"this" is casted into ProductEntryCallback
 
-				intent.putExtra(
-					getString(R.string.intent_extra_product),
-					new ProductTransition((Product) getProductsListView().getItemAtPosition(position))
-				);
+        this.getProductsListView().setAdapter(this.productListAdapter);
+        this.getProductsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), ProductViewActivity.class);
+                intent.putExtra(
+                        getString(R.string.intent_extra_product),
+                        new ProductTransition((Product) getProductsListView().getItemAtPosition(position))
+                );
 
-				startActivity(intent);
-			}
-		});
-	}
+                startActivity(intent);
+            }
+        });
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-		(new RetrieveProductsTask()).execute();
-	}
+        (new RetrieveProductsTask()).execute();
+    }
 
-	private ListView getProductsListView() {
-		return (ListView) this.findViewById(R.id.list_view_products_id);
-	}
+    private ListView getProductsListView() {
+        return (ListView) this.findViewById(R.id.list_view_products_id);
+    }
 
-	public void searchButton(View view) {
-		searchEditText = findViewById(R.id.editTextSearchById);
-		String searchId = searchEditText.getText().toString();
-	//	searchId.addTextChangedListener
-		(new searchingTask(searchId)).execute();
-	}
+    public void searchButton(View view) {
+        searchEditText = findViewById(R.id.editTextSearchById);
+        String searchId = searchEditText.getText().toString();
+        //	searchId.addTextChangedListener
+        (new searchingTask(searchId)).execute();
+    }
 
-///////////////////////////////////////// In progress {
-	private class searchingTask extends AsyncTask<Void, Void, ApiResponse<Product>> {
-		 String searchID;
-		@Override
-		protected void onPreExecute() {
-			this.searchingProductsAlert.show();
-		}
+    //from ProductEntryCallback interface
+    @Override
+    public void onProductEntryAdd(int position) {
+        Toast.makeText(ProductsListingActivity.this, "test add product at position " + position, Toast.LENGTH_SHORT).show();
+        productsInCart.add(this.products.get(position)); //todo fix logic
 
-		@Override
-		protected ApiResponse<Product> doInBackground(Void... params) {
-			ApiResponse<Product> apiResponse = (new ProductService()).getProductByLookupCode(searchID);
+    }
 
-			if (apiResponse.isValidResponse()) {
-				products.clear();
-				products.add(apiResponse.getData());
-			}
+    //from ProductEntryCallback interface
+    @Override
+    public void onProductEntryRemove(int position) {
+        Toast.makeText(ProductsListingActivity.this, "test remove product at position " + position, Toast.LENGTH_SHORT).show();
+        productsInCart.remove(position); //todo fix logic
+    }
 
-			return apiResponse;
-		}
+    public void productListNextFAB(View view) {
+        Intent confirmationPage = new Intent(ProductsListingActivity.this, ConfirmationScreenActivity.class);
+        startActivity(confirmationPage);
+    }
 
-		@Override
-		protected void onPostExecute(ApiResponse<Product> apiResponse) {
-			if (apiResponse.isValidResponse()) {
-				productListAdapter.notifyDataSetChanged();
-			}
+    ///////////////////////////////////////// In progress {
+    private class searchingTask extends AsyncTask<Void, Void, ApiResponse<Product>> {
+        String searchID;
 
-			this.searchingProductsAlert.dismiss();
+        @Override
+        protected void onPreExecute() {
+            this.searchingProductsAlert.show();
+        }
 
-			if (!apiResponse.isValidResponse()) {
-				new AlertDialog.Builder(ProductsListingActivity.this).
-						setMessage("unable to search products").
-						setPositiveButton(
-								R.string.button_dismiss,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog, int id) {
-										dialog.dismiss();
-									}
-								}
-						).
-						create().
-						show();
-			}
-		}
+        @Override
+        protected ApiResponse<Product> doInBackground(Void... params) {
+            ApiResponse<Product> apiResponse = (new ProductService()).getProductByLookupCode(searchID);
 
-		private AlertDialog searchingProductsAlert;
+            if (apiResponse.isValidResponse()) {
+                products.clear();
+                products.add(apiResponse.getData());
+            }
 
-		private searchingTask(String id) {
-			 searchID=id;
-			this.searchingProductsAlert = new AlertDialog.Builder(ProductsListingActivity.this).
-					setMessage("searching products").
-					create();
-		}
-	}
+            return apiResponse;
+        }
+
+        @Override
+        protected void onPostExecute(ApiResponse<Product> apiResponse) {
+            if (apiResponse.isValidResponse()) {
+                productListAdapter.notifyDataSetChanged();
+            }
+
+            this.searchingProductsAlert.dismiss();
+
+            if (!apiResponse.isValidResponse()) {
+                new AlertDialog.Builder(ProductsListingActivity.this).
+                        setMessage("unable to search products").
+                        setPositiveButton(
+                                R.string.button_dismiss,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                        ).
+                        create().
+                        show();
+            }
+        }
+
+        private AlertDialog searchingProductsAlert;
+
+        private searchingTask(String id) {
+            searchID = id;
+            this.searchingProductsAlert = new AlertDialog.Builder(ProductsListingActivity.this).
+                    setMessage("searching products").
+                    create();
+        }
+    }
 
 //////////////////////////////////////////////// }
 
 
-	private class RetrieveProductsTask extends AsyncTask<Void, Void, ApiResponse<List<Product>>> {
-		@Override
-		protected void onPreExecute() {
-			this.loadingProductsAlert.show();
-		}
+    private class RetrieveProductsTask extends AsyncTask<Void, Void, ApiResponse<List<Product>>> {
+        @Override
+        protected void onPreExecute() {
+            this.loadingProductsAlert.show();
+        }
 
-		@Override
-		protected ApiResponse<List<Product>> doInBackground(Void... params) {
-			ApiResponse<List<Product>> apiResponse = (new ProductService()).getProducts();
+        @Override
+        protected ApiResponse<List<Product>> doInBackground(Void... params) {
+            ApiResponse<List<Product>> apiResponse = (new ProductService()).getProducts();
 
-			if (apiResponse.isValidResponse()) {
-				products.clear();
-				products.addAll(apiResponse.getData());
-			}
+            if (apiResponse.isValidResponse()) {
+                products.clear();
+                products.addAll(apiResponse.getData());
+            }
 
-			return apiResponse;
-		}
+            return apiResponse;
+        }
 
-		@Override
-		protected void onPostExecute(ApiResponse<List<Product>> apiResponse) {
-			if (apiResponse.isValidResponse()) {
-				productListAdapter.notifyDataSetChanged();
-			}
+        @Override
+        protected void onPostExecute(ApiResponse<List<Product>> apiResponse) {
+            if (apiResponse.isValidResponse()) {
+                productListAdapter.notifyDataSetChanged();
+            }
 
-			this.loadingProductsAlert.dismiss();
+            this.loadingProductsAlert.dismiss();
 
-			if (!apiResponse.isValidResponse()) {
-				new AlertDialog.Builder(ProductsListingActivity.this).
-					setMessage(R.string.alert_dialog_products_load_failure).
-					setPositiveButton(
-						R.string.button_dismiss,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.dismiss();
-							}
-						}
-					).
-					create().
-					show();
-			}
-		}
+            if (!apiResponse.isValidResponse()) {
+                new AlertDialog.Builder(ProductsListingActivity.this).
+                        setMessage(R.string.alert_dialog_products_load_failure).
+                        setPositiveButton(
+                                R.string.button_dismiss,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                        ).
+                        create().
+                        show();
+            }
+        }
 
-		private AlertDialog loadingProductsAlert;
+        private AlertDialog loadingProductsAlert;
 
-		private RetrieveProductsTask() {
-			this.loadingProductsAlert = new AlertDialog.Builder(ProductsListingActivity.this).
-				setMessage(R.string.alert_dialog_products_loading).
-				create();
-		}
-	}
+        private RetrieveProductsTask() {
+            this.loadingProductsAlert = new AlertDialog.Builder(ProductsListingActivity.this).
+                    setMessage(R.string.alert_dialog_products_loading).
+                    create();
+        }
+    }
 
-	private List<Product> products;
-	private ProductListAdapter productListAdapter;
+    private List<Product> products;
+    private ProductListAdapter productListAdapter;
 }

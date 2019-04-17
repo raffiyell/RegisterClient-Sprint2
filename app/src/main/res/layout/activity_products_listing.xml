@@ -24,8 +24,10 @@
     <include layout="@layout/content_products_listing" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/product_list_next_FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="productListNextFAB"
         android:layout_gravity="end|bottom"
         android:layout_margin="20dp"
         android:src="@drawable/ic_arrow_forward_white_24dp"

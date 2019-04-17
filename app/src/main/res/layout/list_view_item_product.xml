@@ -151,6 +151,7 @@
                     android:layout_gravity="end"
                     android:layout_margin="4dp"
                     android:backgroundTint="#0298FF"
+                    android:id="@+id/addProductCardView"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
