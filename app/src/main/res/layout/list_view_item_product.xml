@@ -76,6 +76,7 @@
                     android:layout_gravity="end"
                     android:layout_margin="4dp"
                     android:backgroundTint="#292726"
+                    android:onClick="decrement"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
@@ -93,12 +94,14 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
+                    android:id="@+id/cart_product_quantity"
                     android:layout_width="wrap_content"
                     android:text="0"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"/>
+
                 <android.support.v7.widget.CardView
-                    android:layout_width="50dp"
+                    android:layout_width="51dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="4dp"
@@ -106,6 +109,7 @@
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
+                    android:onClick="increment"
                     android:stateListAnimator="@animator/elevate_button"
                     app:cardCornerRadius="18dp"
                     app:cardUseCompatPadding="true">

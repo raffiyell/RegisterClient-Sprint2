@@ -15,9 +15,14 @@ import edu.uark.uarkregisterapp.R;
 import edu.uark.uarkregisterapp.models.api.Product;
 
 public class ProductListAdapter extends ArrayAdapter<Product> {
+	int productCount = 0;
+
 	@NonNull
 	@Override
 	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+
+
+
 		View view = convertView;
 		if (view == null) {
 			LayoutInflater inflater = LayoutInflater.from(this.getContext());
@@ -35,6 +40,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 			if (countTextView != null) {
 				countTextView.setText(String.format(Locale.getDefault(), "%d", product.getCount()));
 			}
+
+			TextView cartProductQuantity = view.findViewById(R.id.cart_product_quantity);
+			cartProductQuantity.setText(productCount + " ");
+
 		}
 
 		return view;
@@ -42,5 +51,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 
 	public ProductListAdapter(Context context, List<Product> products) {
 		super(context, R.layout.list_view_item_product, products);
+	}
+
+	public void increment(View view)
+	{
+		productCount++;
 	}
 }
