@@ -52,6 +52,16 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
         return this;
     }
 
+
+
+    private UUID transactionReferenceId;
+    public UUID getTransactionReferenceId() {
+        return transactionReferenceId;
+    }
+    public TransactionEntry setTransactionReferenceId(UUID transactionReferenceId) {
+        this.transactionReferenceId = transactionReferenceId;
+        return this;
+    }
     private Date createdOn;
     public Date getCreatedOn() {
         return createdOn;
@@ -60,6 +70,7 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
         this.createdOn = createdOn;
         return this;
     }
+
 
     @Override
     public TransactionEntry loadFromJson(JSONObject rawJsonObject) {
@@ -71,6 +82,11 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
         this.productLookupCode = rawJsonObject.optString(TransactionEntryFieldName.PRODUCT_LOOKUP_CODE.getFieldName());
         this.quantity = rawJsonObject.optInt(TransactionEntryFieldName.QUANTITY.getFieldName());
         this.price = rawJsonObject.optDouble(TransactionEntryFieldName.PRICE.getFieldName());
+
+        value = rawJsonObject.optString(TransactionEntryFieldName.TRANSACTION_REFERENCE_ID.getFieldName());
+        if (!StringUtils.isBlank(value)) {
+            this.transactionReferenceId = UUID.fromString(value);
+        }
 
         value = rawJsonObject.optString(TransactionEntryFieldName.CREATED_ON.getFieldName());
         if (!StringUtils.isBlank(value)) {
@@ -93,6 +109,7 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
             jsonObject.put(TransactionEntryFieldName.PRODUCT_LOOKUP_CODE.getFieldName(), this.productLookupCode);
             jsonObject.put(TransactionEntryFieldName.QUANTITY.getFieldName(), this.quantity);
             jsonObject.put(TransactionEntryFieldName.PRICE.getFieldName(), this.price);
+            jsonObject.put(TransactionEntryFieldName.TRANSACTION_REFERENCE_ID.getFieldName(), this.transactionReferenceId);
             jsonObject.put(TransactionEntryFieldName.CREATED_ON.getFieldName(), this.createdOn);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -107,6 +124,7 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
         this.productLookupCode = StringUtils.EMPTY;
         this.price = 0.0;
         this.quantity = 0;
+        this.transactionReferenceId =  new UUID(0, 0);
     }
 
 

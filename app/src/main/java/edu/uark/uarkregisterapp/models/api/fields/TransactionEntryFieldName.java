@@ -8,6 +8,7 @@ public enum TransactionEntryFieldName implements FieldNameInterface {
     PRODUCT_LOOKUP_CODE("productlookupcode"),
     QUANTITY("quantity"),
     PRICE("price"),
+    TRANSACTION_REFERENCE_ID("transactionreferenceid"),
     CREATED_ON("createdOn");
 
     private String fieldName;

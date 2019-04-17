@@ -77,8 +77,7 @@ public class TransactionTransition implements Parcelable {
         return this;
     }
 
-
-
+    
 
 
     @Override
