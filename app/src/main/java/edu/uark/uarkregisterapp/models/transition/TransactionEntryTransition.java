@@ -14,7 +14,7 @@ import edu.uark.uarkregisterapp.models.api.TransactionEntry;
 
 public class TransactionEntryTransition implements Parcelable {
 
-    //todo may add transaction reference id variable and getters/setters
+
 
     private UUID recordId;
     public UUID getRecordId() {
@@ -61,6 +61,18 @@ public class TransactionEntryTransition implements Parcelable {
         return this;
     }
 
+    //todo add all getters setters. CHECK!!
+
+    private UUID transactionReferenceId;
+    public UUID getTransactionReferenceId() {
+        return transactionReferenceId;
+    }
+    public TransactionEntryTransition setTransactionReferenceId(UUID transactionReferenceId) {
+        this.transactionReferenceId = transactionReferenceId;
+        return this;
+    }
+
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -68,6 +80,7 @@ public class TransactionEntryTransition implements Parcelable {
         dest.writeString(productLookupCode);
         dest.writeInt(quantity);
         dest.writeDouble(price);
+        dest.writeByteArray((new UUIDToByteConverterCommand()).setValueToConvert(this.transactionReferenceId).execute());
         dest.writeLong(this.createdOn.getTime());
     }
 
@@ -94,6 +107,7 @@ public class TransactionEntryTransition implements Parcelable {
         this.productLookupCode = StringUtils.EMPTY;
         this.quantity = 0;
         this.price = 0.0;
+        this.transactionReferenceId = new UUID(0, 0);
         this.createdOn = this.createdOn = new Date();
     }
 
@@ -103,7 +117,7 @@ public class TransactionEntryTransition implements Parcelable {
         this.quantity = transactionEntry.getQuantity();
         this.price = transactionEntry.getPrice();
         this.createdOn = transactionEntry.getCreatedOn();
-
+        this.transactionReferenceId = transactionEntry.getTransactionReferenceId();
     }
 
     public TransactionEntryTransition(Parcel in) {
@@ -111,6 +125,7 @@ public class TransactionEntryTransition implements Parcelable {
         this.productLookupCode = in.readString();
         this.quantity = in.readInt();
         this.price = in.readDouble();
+        this.transactionReferenceId = (new ByteToUUIDConverterCommand()).setValueToConvert(in.createByteArray()).execute();
         this.createdOn = new Date();
         this.createdOn.setTime(in.readLong());
     }
