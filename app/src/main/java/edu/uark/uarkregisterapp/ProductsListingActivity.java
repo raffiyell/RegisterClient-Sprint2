@@ -103,6 +103,14 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
 
     public void productListNextFAB(View view) {
         Intent confirmationPage = new Intent(ProductsListingActivity.this, ConfirmationScreenActivity.class);
+
+
+        //create ProductTransition version of the productsInCart
+        ArrayList<ProductTransition> cart = new ArrayList<>();
+        for (int i = 0; i < productsInCart.size(); i++) {
+            cart.add(new ProductTransition(productsInCart.get(i)));
+        }
+        confirmationPage.putParcelableArrayListExtra("cart",cart);
         startActivity(confirmationPage);
     }
 

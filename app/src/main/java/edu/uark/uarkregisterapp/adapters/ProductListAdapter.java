@@ -27,6 +27,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         this.productEntryCallback = productEntryCallback;
     }
 
+    public ProductListAdapter(Context context, List<Product> products) {
+        super(context, R.layout.list_view_item_product, products);
+    }
+
     @NonNull
     @Override
     public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
