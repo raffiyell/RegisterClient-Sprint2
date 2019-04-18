@@ -45,6 +45,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             view = inflater.inflate(R.layout.list_view_item_product, parent, false);
 
             holder.lookupCodeTextView = (TextView) view.findViewById(R.id.list_view_item_product_lookup_code);
+            holder.priceTextView = view.findViewById(R.id.list_view_item_price);
             holder.cartProductQuantity = view.findViewById(R.id.cart_product_quantity);
             holder.addCardView = view.findViewById(R.id.incrementCardView);
             holder.minusCardView = view.findViewById(R.id.decrementCardView);
@@ -128,6 +129,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                 holder.countTextView.setText(String.format(Locale.getDefault(), "%d", product.getCount()));
             }
 
+            if (holder.priceTextView != null)   {
+                holder.priceTextView.setText(product.getPrice()+ " ");
+            }
+
         }
         return view;
     }
@@ -150,7 +155,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 
     static class ViewHolder {
         public TextView lookupCodeTextView;
-        TextView countTextView;
+        public TextView countTextView;
+        public TextView priceTextView;
         public CardView addCardView;
         public CardView minusCardView;
         public TextView cartProductQuantity;
