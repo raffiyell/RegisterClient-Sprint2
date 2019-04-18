@@ -37,12 +37,6 @@
                     android:text="@string/text_view_products_lookup_code"
                     android:textAlignment="center" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="3"
-                    android:text="Name"
-                    android:textAlignment="center" />
 
                 <TextView
                     android:id="@+id/list_view_item_price"
