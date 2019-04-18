@@ -20,7 +20,7 @@ import edu.uark.uarkregisterapp.models.api.Product;
 public class ProductListAdapter extends ArrayAdapter<Product> {
     private static final String TAG = "ProductListAdapter";
     private ProductEntryCallback productEntryCallback;
-    private int productCount = 0;
+    private int productCount;
 
     public ProductListAdapter(Context context, List<Product> products, ProductEntryCallback productEntryCallback) {
         super(context, R.layout.list_view_item_product, products);
@@ -30,8 +30,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     @NonNull
     @Override
     public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
-
+        Product product = this.getItem(position);
+        productCount = 0;
         View view = convertView;
+
         final ViewHolder holder;
         holder = new ViewHolder();
         if (view == null) {
@@ -67,18 +69,20 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                 }
             });
 
+            final String lookupCode = product.getLookupCode();
             holder.removeProductCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (productCount <= 0) {
-                        //do nothing
+                        holder.addCardView.setVisibility(View.INVISIBLE);
+                        holder.minusCardView.setVisibility(View.INVISIBLE);
+                        holder.cartProductQuantity.setVisibility(View.INVISIBLE);
                     } else { // makes sure nothing is removed if the product count is already 0. product is only removed in the cart if it is already added
                         removeProductFromCart();
                         holder.addCardView.setVisibility(View.INVISIBLE);
                         holder.minusCardView.setVisibility(View.INVISIBLE);
                         holder.cartProductQuantity.setVisibility(View.INVISIBLE);
-
-                        productEntryCallback.onProductEntryRemove(position);
+                        productEntryCallback.onProductEntryRemove(lookupCode);
                     }
 
                     holder.cartProductQuantity.setText(productCount + "");
@@ -97,6 +101,9 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 
                     } else {
                         //do nothing.
+                        holder.addCardView.setVisibility(View.VISIBLE);
+                        holder.minusCardView.setVisibility(View.VISIBLE);
+                        holder.cartProductQuantity.setVisibility(View.VISIBLE);
                     }
 
                     holder.cartProductQuantity.setText(productCount + "");
@@ -106,7 +113,6 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         }
 
 
-        Product product = this.getItem(position);
         if (product != null) {
 
             if (holder.lookupCodeTextView != null) {
@@ -153,7 +159,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     public interface ProductEntryCallback {
         void onProductEntryAdd(int position);
 
-        void onProductEntryRemove(int position);
+        void onProductEntryRemove(String lookupCode);
     }
 
 }

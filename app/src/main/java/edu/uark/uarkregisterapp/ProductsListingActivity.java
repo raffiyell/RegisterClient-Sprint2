@@ -55,7 +55,6 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
                         getString(R.string.intent_extra_product),
                         new ProductTransition((Product) getProductsListView().getItemAtPosition(position))
                 );
-
                 startActivity(intent);
             }
         });
@@ -83,15 +82,23 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
     @Override
     public void onProductEntryAdd(int position) {
         Toast.makeText(ProductsListingActivity.this, "test add product at position " + position, Toast.LENGTH_SHORT).show();
-        productsInCart.add(this.products.get(position)); //todo fix logic
+        productsInCart.add(this.products.get(position));
+        Toast.makeText(this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
 
     }
 
     //from ProductEntryCallback interface
     @Override
-    public void onProductEntryRemove(int position) {
-        Toast.makeText(ProductsListingActivity.this, "test remove product at position " + position, Toast.LENGTH_SHORT).show();
-        productsInCart.remove(position); //todo fix logic
+    public void onProductEntryRemove(String lookupCode) {
+
+        Toast.makeText(this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < productsInCart.size(); i++){
+            if (productsInCart.get(i).getLookupCode().equals(lookupCode))
+            {
+                productsInCart.remove(i);
+            }
+        }
+
     }
 
     public void productListNextFAB(View view) {
