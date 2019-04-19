@@ -22,14 +22,21 @@ import java.util.List;
 import edu.uark.uarkregisterapp.adapters.ProductListAdapter;
 import edu.uark.uarkregisterapp.models.api.ApiResponse;
 import edu.uark.uarkregisterapp.models.api.Product;
+import edu.uark.uarkregisterapp.models.api.Transaction;
+import edu.uark.uarkregisterapp.models.api.TransactionEntry;
 import edu.uark.uarkregisterapp.models.api.services.ProductService;
+import edu.uark.uarkregisterapp.models.transition.EmployeeTransition;
 import edu.uark.uarkregisterapp.models.transition.ProductTransition;
+import edu.uark.uarkregisterapp.models.transition.TransactionEntryTransition;
 
 
 public class ProductsListingActivity extends AppCompatActivity implements ProductListAdapter.ProductEntryCallback {
     private EditText searchEditText;
+
     private ProductListAdapter.ProductEntryCallback productEntryCallback;
     private ArrayList<Product> productsInCart;
+    private ArrayList<TransactionEntryTransition> transactionEntriesTransition;
+    private Transaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,8 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        createTransaction();
 
         this.products = new ArrayList<>(); //products in inventory
         this.productsInCart = new ArrayList<>(); // products added in cart
@@ -63,8 +72,15 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
     @Override
     protected void onResume() {
         super.onResume();
-
         (new RetrieveProductsTask()).execute();
+    }
+
+    private void createTransaction() {
+        String cashierId = this.getIntent().getParcelableExtra("intent_employeeid");
+        transaction = new Transaction();
+        transaction.setCashierId(cashierId);
+        this.transactionEntriesTransition = new ArrayList<>();
+        Toast.makeText(ProductsListingActivity.this, "cashier id = " + transaction.getCashierId(), Toast.LENGTH_SHORT).show();
     }
 
     private ListView getProductsListView() {
@@ -80,11 +96,17 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
 
     //from ProductEntryCallback interface
     @Override
-    public void onProductEntryAdd(int position) {
+    public void onProductEntryAdd(int position, int productCount) {
         Toast.makeText(ProductsListingActivity.this, "test add product at position " + position, Toast.LENGTH_SHORT).show();
         productsInCart.add(this.products.get(position));
-        Toast.makeText(this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
 
+        double newPrice = products.get(position).getPrice() * productCount;
+        TransactionEntryTransition newTransactionEntry = new TransactionEntryTransition(transaction.getRecordId(), products.get(position).getLookupCode(), newPrice);
+        transactionEntriesTransition.add(newTransactionEntry);
+
+        //Toast.makeText(this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
+
+        //todo finish. send TransactionEntries to the confirmation activity
     }
 
     //from ProductEntryCallback interface
@@ -92,25 +114,32 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
     public void onProductEntryRemove(String lookupCode) {
 
         Toast.makeText(this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
-        for (int i = 0; i < productsInCart.size(); i++){
-            if (productsInCart.get(i).getLookupCode().equals(lookupCode))
-            {
+        for (int i = 0; i < productsInCart.size(); i++) {
+            if (productsInCart.get(i).getLookupCode().equals(lookupCode)) {
                 productsInCart.remove(i);
             }
         }
 
     }
 
+    @Override
+    public void onProductEntryQuantityUpdate(String lookupCode, int quantity) {
+        for (int i = 0; i < transactionEntriesTransition.size(); i++) {
+            if (transactionEntriesTransition.get(i).getLookupCode().equals(lookupCode)) {
+                transactionEntriesTransition.remove(i);
+            }
+        }
+    }
+
     public void productListNextFAB(View view) {
         Intent confirmationPage = new Intent(ProductsListingActivity.this, ConfirmationScreenActivity.class);
-
-
         //create ProductTransition version of the productsInCart
         ArrayList<ProductTransition> cart = new ArrayList<>();
         for (int i = 0; i < productsInCart.size(); i++) {
             cart.add(new ProductTransition(productsInCart.get(i)));
         }
-        confirmationPage.putParcelableArrayListExtra("cart",cart);
+        confirmationPage.putParcelableArrayListExtra("cart", cart);
+//        confirmationPage.putParcelableArrayListExtra("transactionEntryCart", transactionEntriesTransition);
         startActivity(confirmationPage);
     }
 

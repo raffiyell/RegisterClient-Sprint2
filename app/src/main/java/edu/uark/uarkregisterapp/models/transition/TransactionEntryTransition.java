@@ -120,6 +120,13 @@ public class TransactionEntryTransition implements Parcelable {
         this.transactionReferenceId = transactionEntry.getTransactionReferenceId();
     }
 
+    public TransactionEntryTransition(UUID transactionReferenceId, String productLookupCode, double price){
+        this.transactionReferenceId = transactionReferenceId;
+        this.productLookupCode = productLookupCode;
+        this.price = price;
+    }
+
+
     public TransactionEntryTransition(Parcel in) {
         this.recordId = (new ByteToUUIDConverterCommand()).setValueToConvert(in.createByteArray()).execute();
         this.productLookupCode = in.readString();
@@ -129,5 +136,7 @@ public class TransactionEntryTransition implements Parcelable {
         this.createdOn = new Date();
         this.createdOn.setTime(in.readLong());
     }
+
+
 
 }

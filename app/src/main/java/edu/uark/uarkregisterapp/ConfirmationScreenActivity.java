@@ -10,13 +10,15 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import edu.uark.uarkregisterapp.adapters.ConfirmationListAdapter;
 import edu.uark.uarkregisterapp.adapters.ProductListAdapter;
 import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.transition.ProductTransition;
+import edu.uark.uarkregisterapp.models.transition.TransactionEntryTransition;
 
 public class ConfirmationScreenActivity extends AppCompatActivity {
     private ArrayList<Product> productsInCart;
-    private ProductListAdapter productListAdapter;
+    private ConfirmationListAdapter productListAdapter;
 
 
     @Override
@@ -25,6 +27,8 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_confirmation_screen);
 
         ArrayList<ProductTransition> cart = getIntent().getParcelableArrayListExtra("cart");
+      //  ArrayList<TransactionEntryTransition> transactionEntryTransitions = getIntent().getParcelableArrayListExtra("transactionEntryCart");
+
         productsInCart = new ArrayList<>();
 
         for (int i = 0; i < cart.size(); i ++){
@@ -32,11 +36,11 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         }
 
         Toast.makeText(ConfirmationScreenActivity.this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
+    //    Toast.makeText(ConfirmationScreenActivity.this, transactionEntryTransitions.toString(), Toast.LENGTH_SHORT).show();
         ListView confirmationListView = findViewById(R.id.confirmationListView);
 
 
-        productListAdapter = new ProductListAdapter(this, productsInCart); //"this" is casted into ProductEntryCallback
-
+        productListAdapter = new ConfirmationListAdapter(this, productsInCart);
         confirmationListView.setAdapter(productListAdapter);
 
 

@@ -127,5 +127,11 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
         this.transactionReferenceId =  new UUID(0, 0);
     }
 
+    public TransactionEntry(UUID transactionReferenceId, String productLookupCode, double price){
+        this.transactionReferenceId = transactionReferenceId;
+        this.productLookupCode = productLookupCode;
+        this.price = price;
+    }
+
 
 }

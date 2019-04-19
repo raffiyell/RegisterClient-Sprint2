@@ -2,6 +2,7 @@ package edu.uark.uarkregisterapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void beginTransactionButtonOnClick(View view) {
-        Intent beginTransaction = new Intent (MainActivity.this, ProductsListingActivity.class);
+        Intent beginTransaction = new Intent(MainActivity.this, ProductsListingActivity.class);
+        beginTransaction.putExtra("intent_employeeid", this.employeeTransition.getEmployeeId());
         startActivity(beginTransaction);
     }
 
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private TextView getEmployeeWelcomeTextView() {
-        return (TextView)this.findViewById(R.id.text_view_employee_welcome);
+        return (TextView) this.findViewById(R.id.text_view_employee_welcome);
     }
 
     private void displayFunctionalityNotAvailableDialog() {
@@ -68,6 +70,26 @@ public class MainActivity extends AppCompatActivity {
                 create().
                 show();
     }
+
+    /**TODO finish this so the the employee name and id will be saved on the device. When the back button is pressed from the productslistingactivity is clicked, the name and id can be retrieved again
+     *
+     * private void saveSharedPreference() {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("Employee", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("name", );
+        editor.apply();
+
+    }
+
+
+    private void loadSharedPreference() {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        String loadedDateFormat = sharedPreferences.getString("DateFormat", "N/A");
+
+    }
+     **/
 
     private EmployeeTransition employeeTransition;
 }

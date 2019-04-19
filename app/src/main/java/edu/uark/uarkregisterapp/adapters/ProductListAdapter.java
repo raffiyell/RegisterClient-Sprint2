@@ -21,6 +21,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     private static final String TAG = "ProductListAdapter";
     private ProductEntryCallback productEntryCallback;
     private int productCount;
+    private Product product;
 
     public ProductListAdapter(Context context, List<Product> products, ProductEntryCallback productEntryCallback) {
         super(context, R.layout.list_view_item_product, products);
@@ -34,7 +35,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     @NonNull
     @Override
     public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
-        Product product = this.getItem(position);
+        product = this.getItem(position);
         productCount = 0;
         View view = convertView;
 
@@ -99,7 +100,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                 public void onClick(View v) {
                     if (productCount <= 0) {
                         productCount = 1;
-                        productEntryCallback.onProductEntryAdd(position); //adds the product into the cart. implemented in ProductsListingActivity
+                        productEntryCallback.onProductEntryAdd(position, productCount); //adds the product into the cart. implemented in ProductsListingActivity
                         holder.addCardView.setVisibility(View.VISIBLE);
                         holder.minusCardView.setVisibility(View.VISIBLE);
                         holder.cartProductQuantity.setVisibility(View.VISIBLE);
@@ -129,8 +130,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                 holder.countTextView.setText(String.format(Locale.getDefault(), "%d", product.getCount()));
             }
 
-            if (holder.priceTextView != null)   {
-                holder.priceTextView.setText(product.getPrice()+ " ");
+            if (holder.priceTextView != null) {
+                holder.priceTextView.setText(product.getPrice() + " ");
             }
 
         }
@@ -140,12 +141,15 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 
     private void increment() {
         productCount++;
+        productEntryCallback.onProductEntryQuantityUpdate(product.getLookupCode(), productCount);
     }
 
     private void decrement() {
         productCount--;
         if (productCount < 0)
             productCount = 0;
+
+        productEntryCallback.onProductEntryQuantityUpdate(product.getLookupCode(), productCount);
     }
 
     private void removeProductFromCart() {
@@ -167,9 +171,12 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     }
 
     public interface ProductEntryCallback {
-        void onProductEntryAdd(int position);
+        void onProductEntryAdd(int position, int productCount);
 
         void onProductEntryRemove(String lookupCode);
+
+        void onProductEntryQuantityUpdate(String lookupCode, int quantity);
+
     }
 
 }

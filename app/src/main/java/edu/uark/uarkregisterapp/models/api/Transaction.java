@@ -16,71 +16,83 @@ import edu.uark.uarkregisterapp.models.api.fields.TransactionFieldName;
 import edu.uark.uarkregisterapp.models.api.interfaces.ConvertToJsonInterface;
 import edu.uark.uarkregisterapp.models.api.interfaces.LoadFromJsonInterface;
 
-public class Transaction  implements ConvertToJsonInterface, LoadFromJsonInterface<Transaction> {
+public class Transaction implements ConvertToJsonInterface, LoadFromJsonInterface<Transaction> {
     private UUID recordId;
+
     public UUID getRecordId() {
         return recordId;
     }
+
     public Transaction setRecordId(UUID recordId) {
         this.recordId = recordId;
         return this;
     }
 
     private String cashierId; // todo check if it should be  a string to reference employeeId or a UUID
+
     public String getCashierId() {
         return cashierId;
     }
+
     public Transaction setCashierId(String cashierId) {
         this.cashierId = cashierId;
         return this;
     }
 
     private double totalAmount;
+
     public double getTotalAmount() {
         return totalAmount;
     }
+
     public Transaction setTotalAmount(long totalAmount) {
         this.totalAmount = totalAmount;
         return this;
     }
 
     private String transactionType;
+
     public String getTransactionType() {
         return transactionType;
     }
+
     public Transaction setTransactionType(String transactionType) {
         this.transactionType = transactionType;
         return this;
     }
 
     private UUID referenceId; //change data type as needed
+
     public UUID getReferenceId() {
         return referenceId;
     }
+
     public Transaction setReferenceId(UUID referenceId) {
         this.referenceId = referenceId;
         return this;
     }
 
     private Date createdOn;
+
     public Date getCreatedOn() {
         return createdOn;
     }
+
     public Transaction setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
         return this;
     }
 
     private int totalItemSold; //total items sold may not be needed
+
     public int getTotalItemSold() {
         return totalItemSold;
     }
+
     public Transaction setTotalItemSold(int totalItemSold) {
         this.totalItemSold = totalItemSold;
         return this;
     }
-
-
 
 
     @Override
@@ -140,7 +152,7 @@ public class Transaction  implements ConvertToJsonInterface, LoadFromJsonInterfa
         this.recordId = new UUID(0, 0);
         this.createdOn = new Date();
         this.cashierId = StringUtils.EMPTY;
-        this.totalAmount= 0.0;
+        this.totalAmount = 0.0;
         this.transactionType = StringUtils.EMPTY;
         this.referenceId = new UUID(0, 0);
         this.totalItemSold = 0;
