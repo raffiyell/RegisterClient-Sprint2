@@ -19,11 +19,11 @@ import edu.uark.uarkregisterapp.models.api.interfaces.LoadFromJsonInterface;
 public class Transaction implements ConvertToJsonInterface, LoadFromJsonInterface<Transaction> {
     private UUID recordId;
 
-    public UUID getRecordId() {
+    public UUID getId() {
         return recordId;
     }
 
-    public Transaction setRecordId(UUID recordId) {
+    public Transaction setId(UUID recordId) {
         this.recordId = recordId;
         return this;
     }

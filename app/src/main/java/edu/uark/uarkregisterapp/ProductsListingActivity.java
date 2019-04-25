@@ -101,7 +101,7 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
         productsInCart.add(this.products.get(position));
 
         double newPrice = products.get(position).getPrice() * productCount;
-        TransactionEntryTransition newTransactionEntry = new TransactionEntryTransition(transaction.getRecordId(), products.get(position).getLookupCode(), newPrice);
+        TransactionEntryTransition newTransactionEntry = new TransactionEntryTransition(transaction.getId(), products.get(position).getLookupCode(), newPrice);
         transactionEntriesTransition.add(newTransactionEntry);
 
         //Toast.makeText(this, productsInCart.toString(), Toast.LENGTH_SHORT).show();

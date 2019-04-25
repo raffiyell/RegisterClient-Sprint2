@@ -120,7 +120,7 @@ public class TransactionTransition implements Parcelable {
     }
 
     public TransactionTransition(Transaction transaction) {
-        this.recordId = transaction.getRecordId();
+        this.recordId = transaction.getId();
         this.cashierId = transaction.getCashierId();
         this.totalAmount = transaction.getTotalAmount();
         this.transactionType = transaction.getTransactionType();
