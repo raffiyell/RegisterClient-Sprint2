@@ -17,6 +17,7 @@
     </ListView>
 
     <TextView
+        android:id="@+id/text_view_total_price_confirmation"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="Total price: 0.00"

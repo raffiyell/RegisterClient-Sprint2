@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         transactionEntryTransitionsCart = getIntent().getParcelableArrayListExtra("transactionEntryCart");
 
         //Toast.makeText(ConfirmationScreenActivity.this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(ConfirmationScreenActivity.this, transactionEntryTransitionsCart.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(ConfirmationScreenActivity.this, transactionEntryTransitionsCart.toString(), Toast.LENGTH_SHORT).show();
         ListView confirmationListView = findViewById(R.id.confirmationListView);
 
 
@@ -35,6 +36,18 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
 
         Log.i(TAG, "onCreate: s" + transactionEntryTransitionsCart.get(0).getQuantity() + "s *************************************************");
 
+        TextView totalPriceTextView = findViewById(R.id.text_view_total_price_confirmation);
+        getTotalPrice();
+
+        totalPriceTextView.setText("Total price: " + getTotalPrice());
+    }
+
+    private double getTotalPrice(){
+        double totPrice = 0.0;
+        for (TransactionEntryTransition temp: transactionEntryTransitionsCart){
+            totPrice += temp.getPrice() * temp.getQuantity();
+        }
+        return totPrice;
     }
 
 

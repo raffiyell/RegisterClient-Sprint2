@@ -15,16 +15,18 @@ import java.util.Locale;
 
 import edu.uark.uarkregisterapp.R;
 import edu.uark.uarkregisterapp.models.api.Product;
+import edu.uark.uarkregisterapp.models.api.Transaction;
+import edu.uark.uarkregisterapp.models.transition.TransactionEntryTransition;
 
 public class ProductListAdapter extends ArrayAdapter<Product> {
     private static final String TAG = "ProductListAdapter";
-    private ProductEntryCallback productEntryCallback;
-    private int productCount;
+    private List<TransactionEntryTransition> transactionEntryTransitionCart;
+    private Transaction transaction;
 
-
-    public ProductListAdapter(Context context, List<Product> products, ProductEntryCallback productEntryCallback) {
+    public ProductListAdapter(Context context, List<Product> products, Transaction transaction, List<TransactionEntryTransition> transactionEntryTransition) {
         super(context, R.layout.list_view_item_product, products);
-        this.productEntryCallback = productEntryCallback;
+        this.transaction = transaction;
+        this.transactionEntryTransitionCart = transactionEntryTransition;
     }
 
     public ProductListAdapter(Context context, List<Product> products) {
@@ -34,9 +36,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     @NonNull
     @Override
     public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
-         Product product;
+        Product product;
         product = this.getItem(position); //todo fix: only one product and one productCount is stored in the entire listview, instead of one product and one productCount on each entry in the list
-        productCount = 0;
         View view = convertView;
 
         final ViewHolder holder;
@@ -60,62 +61,78 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             holder.addCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    TransactionEntryTransition transactionEntryTemp = transactionEntryTransitionCart.get(getPositionFromCart(ProductListAdapter.this.getItem(position).getLookupCode()));
                     Log.d(TAG, "onClick: *******************************************");
-                    increment(position);
-                    holder.cartProductQuantity.setText(productCount + " "); //todo fix wrong getcount, switch with the quantity from a TransactionEntry object
+                    int newQuantity = transactionEntryTemp.getQuantity() + 1;
+                    transactionEntryTemp.setQuantity(newQuantity);
+                    holder.cartProductQuantity.setText(transactionEntryTemp.getQuantity() + " ");
                 }
             });
             holder.minusCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    TransactionEntryTransition transactionEntryTemp = transactionEntryTransitionCart.get(getPositionFromCart(ProductListAdapter.this.getItem(position).getLookupCode()));
                     Log.d(TAG, "onClick: *******************************************");
-                    decrement(position);
-                    holder.cartProductQuantity.setText(productCount + "");
+                    int newQuantity = transactionEntryTemp.getQuantity() - 1;
+                    if (newQuantity < 1)
+                        newQuantity = 1;
+                    transactionEntryTemp.setQuantity(newQuantity);
+                    holder.cartProductQuantity.setText(transactionEntryTemp.getQuantity() + "");
                 }
             });
 
-            //final String lookupCode = product.getLookupCode();
             holder.removeProductCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (productCount <= 0) {
-                        holder.addCardView.setVisibility(View.INVISIBLE);
-                        holder.minusCardView.setVisibility(View.INVISIBLE);
-                        holder.cartProductQuantity.setVisibility(View.INVISIBLE);
-                    } else { // makes sure nothing is removed if the product count is already 0. product is only removed in the cart if it is already added
-                        removeProductFromCart();
-                        holder.addCardView.setVisibility(View.INVISIBLE);
-                        holder.minusCardView.setVisibility(View.INVISIBLE);
-                        holder.cartProductQuantity.setVisibility(View.INVISIBLE);
-                        productEntryCallback.onProductEntryRemove(ProductListAdapter.this.getItem(position).getLookupCode());
-                    }
+                    Product tempProduct = ProductListAdapter.this.getItem(position);
 
-                    holder.cartProductQuantity.setText(productCount + "");
+                    if (!cartHasProduct(tempProduct.getLookupCode())) { // makes sure nothing is removed if the product count is already 0. product is only removed in the cart if it is already added
+                        Log.i(TAG, "onClick: product not found in cart. cannot remove anything ************");
+                        //do nothing
+                    } else {
+                        TransactionEntryTransition transactionEntryTemp = transactionEntryTransitionCart.get(getPositionFromCart(tempProduct.getLookupCode()));
+                        transactionEntryTransitionCart.remove(getPositionFromCart(tempProduct.getLookupCode()));
+                        holder.addCardView.setVisibility(View.INVISIBLE);
+                        holder.minusCardView.setVisibility(View.INVISIBLE);
+                        holder.cartProductQuantity.setVisibility(View.INVISIBLE);
+                        holder.cartProductQuantity.setText(transactionEntryTemp.getQuantity() + "");
+                    }
                 }
             });
 
             holder.addProductCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (productCount <= 0) {
-                        productCount = 1;
-                        productEntryCallback.onProductEntryAdd(position); //adds the product into the cart. implemented in ProductsListingActivity
-                        holder.addCardView.setVisibility(View.VISIBLE);
-                        holder.minusCardView.setVisibility(View.VISIBLE);
-                        holder.cartProductQuantity.setVisibility(View.VISIBLE);
+
+                    TransactionEntryTransition newTransactionEntry = new TransactionEntryTransition(transaction.getId(),
+                            ProductListAdapter.this.getItem(position).getLookupCode(),
+                            ProductListAdapter.this.getItem(position).getPrice()); //quantity will be added when the next button is clicked
+
+                    if (cartHasProduct(newTransactionEntry.getLookupCode()))
+                    {
+                        Log.i(TAG, "onClick: product already in cart *************************");
+                        //product already in cart.
+                        //do nothing to prevent redundancy
                     } else {
-                        //do nothing.
-                        holder.addCardView.setVisibility(View.VISIBLE);
-                        holder.minusCardView.setVisibility(View.VISIBLE);
-                        holder.cartProductQuantity.setVisibility(View.VISIBLE);
+                        if (newTransactionEntry.getQuantity() <= 0) {
+                            newTransactionEntry.setQuantity(1);
+                            transactionEntryTransitionCart.add(newTransactionEntry);
+                            holder.addCardView.setVisibility(View.VISIBLE);
+                            holder.minusCardView.setVisibility(View.VISIBLE);
+                            holder.cartProductQuantity.setVisibility(View.VISIBLE);
+                        } else {
+                            //do nothing.
+                            holder.addCardView.setVisibility(View.VISIBLE);
+                            holder.minusCardView.setVisibility(View.VISIBLE);
+                            holder.cartProductQuantity.setVisibility(View.VISIBLE);
+                        }
+                        holder.cartProductQuantity.setText(newTransactionEntry.getQuantity() + " ");
                     }
-                    holder.cartProductQuantity.setText(productCount + "");
                 }
             });
         }
 
         if (product != null) {
-
             if (holder.lookupCodeTextView != null) {
                 holder.lookupCodeTextView.setText(product.getLookupCode());
             }
@@ -132,25 +149,20 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         return view;
     }
 
-    private void increment(int position) {
-        Log.i(TAG, "increment: " + ProductListAdapter.this.getItem(position).getLookupCode() + " " + productCount + " *********************************");
-        productCount++; //fix: wwrong count
-        productEntryCallback.onProductEntryQuantityUpdate(ProductListAdapter.this.getItem(position).getLookupCode(), productCount);
+    private int getPositionFromCart(String lookupCode){
+        for (TransactionEntryTransition temp: transactionEntryTransitionCart) {
+            if(temp.getLookupCode().equals(lookupCode))
+                return transactionEntryTransitionCart.indexOf(temp);
+        }
+        return -1;
     }
 
-    private void decrement(int position) {
-        Log.i(TAG, "decrement:  " + productCount + " *********************************");
-
-        productCount--;
-        if (productCount < 0)
-            productCount = 0;
-
-        productEntryCallback.onProductEntryQuantityUpdate(ProductListAdapter.this.getItem(position).getLookupCode(), productCount);
-    }
-
-    private void removeProductFromCart() {
-        productCount = 0;
-
+    private boolean cartHasProduct(String lookupCode) {
+        for (TransactionEntryTransition temp: transactionEntryTransitionCart) {
+            if(temp.getLookupCode().equals(lookupCode))
+                return true;
+        }
+        return false;
     }
 
     static class ViewHolder {
@@ -162,17 +174,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         public TextView cartProductQuantity;
         public CardView removeProductCardView;
         public CardView addProductCardView;
-
-
     }
 
-    public interface ProductEntryCallback {
-        void onProductEntryAdd(int position);
-
-        void onProductEntryRemove(String lookupCode);
-
-        void onProductEntryQuantityUpdate(String lookupCode, int quantity);
-
-    }
 
 }
