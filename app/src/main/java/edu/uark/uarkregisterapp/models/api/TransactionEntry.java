@@ -52,8 +52,6 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
         return this;
     }
 
-
-
     private UUID transactionReferenceId;
     public UUID getTransactionReferenceId() {
         return transactionReferenceId;
@@ -128,9 +126,12 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
     }
 
     public TransactionEntry(UUID transactionReferenceId, String productLookupCode, double price){
+        this.recordId = new UUID(0, 0);
+        this.createdOn = new Date();
         this.transactionReferenceId = transactionReferenceId;
         this.productLookupCode = productLookupCode;
         this.price = price;
+        this.quantity = 0;
     }
 
 

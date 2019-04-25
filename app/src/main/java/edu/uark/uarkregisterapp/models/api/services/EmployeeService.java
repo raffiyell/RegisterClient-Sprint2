@@ -1,5 +1,8 @@
 package edu.uark.uarkregisterapp.models.api.services;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import org.json.JSONObject;
 
 import java.util.UUID;
@@ -13,6 +16,8 @@ import edu.uark.uarkregisterapp.models.api.interfaces.LoadFromJsonInterface;
 import edu.uark.uarkregisterapp.models.api.interfaces.PathElementInterface;
 
 public class EmployeeService extends BaseRemoteService {
+	private static final String TAG = "EmployeeService";
+
 	public ApiResponse<Employee> getEmployee(UUID employeeId) {
 		return this.readEmployeeDetailsFromResponse(
 			this.<Employee>performGetRequest(
@@ -45,6 +50,7 @@ public class EmployeeService extends BaseRemoteService {
 	}
 
 	public ApiResponse<Employee> createEmployee(Employee employee) {
+		Log.i(TAG, "createEmployee: recordId = " + employee.getId().toString() + "***********************************+********************");
 		return this.readEmployeeDetailsFromResponse(
 			this.<Employee>performPostRequest(
 				this.buildPath(),

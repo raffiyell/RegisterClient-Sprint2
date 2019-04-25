@@ -121,9 +121,12 @@ public class TransactionEntryTransition implements Parcelable {
     }
 
     public TransactionEntryTransition(UUID transactionReferenceId, String productLookupCode, double price){
+        this.recordId = new UUID(0, 0);
         this.transactionReferenceId = transactionReferenceId;
         this.productLookupCode = productLookupCode;
+        this.quantity = 0;
         this.price = price;
+        this.createdOn = new Date();
     }
 
 

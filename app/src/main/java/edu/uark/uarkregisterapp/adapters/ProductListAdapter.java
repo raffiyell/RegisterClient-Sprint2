@@ -1,6 +1,5 @@
 package edu.uark.uarkregisterapp.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -21,7 +20,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     private static final String TAG = "ProductListAdapter";
     private ProductEntryCallback productEntryCallback;
     private int productCount;
-    private Product product;
+
 
     public ProductListAdapter(Context context, List<Product> products, ProductEntryCallback productEntryCallback) {
         super(context, R.layout.list_view_item_product, products);
@@ -35,7 +34,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     @NonNull
     @Override
     public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
-        product = this.getItem(position);
+         Product product;
+        product = this.getItem(position); //todo fix: only one product and one productCount is stored in the entire listview, instead of one product and one productCount on each entry in the list
         productCount = 0;
         View view = convertView;
 
@@ -53,7 +53,6 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             holder.removeProductCardView = view.findViewById(R.id.removeProductCardView);
             holder.addProductCardView = view.findViewById(R.id.addProductCardView);
 
-
             holder.cartProductQuantity.setVisibility(View.INVISIBLE);
             holder.addCardView.setVisibility(View.INVISIBLE);
             holder.minusCardView.setVisibility(View.INVISIBLE);
@@ -62,20 +61,20 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "onClick: *******************************************");
-                    increment();
-                    holder.cartProductQuantity.setText(productCount + "");
+                    increment(position);
+                    holder.cartProductQuantity.setText(productCount + " "); //todo fix wrong getcount, switch with the quantity from a TransactionEntry object
                 }
             });
             holder.minusCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "onClick: *******************************************");
-                    decrement();
+                    decrement(position);
                     holder.cartProductQuantity.setText(productCount + "");
                 }
             });
 
-            final String lookupCode = product.getLookupCode();
+            //final String lookupCode = product.getLookupCode();
             holder.removeProductCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -88,7 +87,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                         holder.addCardView.setVisibility(View.INVISIBLE);
                         holder.minusCardView.setVisibility(View.INVISIBLE);
                         holder.cartProductQuantity.setVisibility(View.INVISIBLE);
-                        productEntryCallback.onProductEntryRemove(lookupCode);
+                        productEntryCallback.onProductEntryRemove(ProductListAdapter.this.getItem(position).getLookupCode());
                     }
 
                     holder.cartProductQuantity.setText(productCount + "");
@@ -100,24 +99,20 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                 public void onClick(View v) {
                     if (productCount <= 0) {
                         productCount = 1;
-                        productEntryCallback.onProductEntryAdd(position, productCount); //adds the product into the cart. implemented in ProductsListingActivity
+                        productEntryCallback.onProductEntryAdd(position); //adds the product into the cart. implemented in ProductsListingActivity
                         holder.addCardView.setVisibility(View.VISIBLE);
                         holder.minusCardView.setVisibility(View.VISIBLE);
                         holder.cartProductQuantity.setVisibility(View.VISIBLE);
-
                     } else {
                         //do nothing.
                         holder.addCardView.setVisibility(View.VISIBLE);
                         holder.minusCardView.setVisibility(View.VISIBLE);
                         holder.cartProductQuantity.setVisibility(View.VISIBLE);
                     }
-
                     holder.cartProductQuantity.setText(productCount + "");
-
                 }
             });
         }
-
 
         if (product != null) {
 
@@ -133,23 +128,24 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             if (holder.priceTextView != null) {
                 holder.priceTextView.setText(product.getPrice() + " ");
             }
-
         }
         return view;
     }
 
-
-    private void increment() {
-        productCount++;
-        productEntryCallback.onProductEntryQuantityUpdate(product.getLookupCode(), productCount);
+    private void increment(int position) {
+        Log.i(TAG, "increment: " + ProductListAdapter.this.getItem(position).getLookupCode() + " " + productCount + " *********************************");
+        productCount++; //fix: wwrong count
+        productEntryCallback.onProductEntryQuantityUpdate(ProductListAdapter.this.getItem(position).getLookupCode(), productCount);
     }
 
-    private void decrement() {
+    private void decrement(int position) {
+        Log.i(TAG, "decrement:  " + productCount + " *********************************");
+
         productCount--;
         if (productCount < 0)
             productCount = 0;
 
-        productEntryCallback.onProductEntryQuantityUpdate(product.getLookupCode(), productCount);
+        productEntryCallback.onProductEntryQuantityUpdate(ProductListAdapter.this.getItem(position).getLookupCode(), productCount);
     }
 
     private void removeProductFromCart() {
@@ -171,7 +167,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     }
 
     public interface ProductEntryCallback {
-        void onProductEntryAdd(int position, int productCount);
+        void onProductEntryAdd(int position);
 
         void onProductEntryRemove(String lookupCode);
 

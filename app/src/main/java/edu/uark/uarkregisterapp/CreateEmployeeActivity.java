@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -20,9 +21,12 @@ import edu.uark.uarkregisterapp.models.api.services.EmployeeService;
 import edu.uark.uarkregisterapp.models.transition.EmployeeTransition;
 
 public class CreateEmployeeActivity extends AppCompatActivity {
+    private static final String TAG = "CreateEmployeeActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: ********************");
+        Log.i(TAG, "onCreate: ********************************************adasdasd*******");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_employee);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));

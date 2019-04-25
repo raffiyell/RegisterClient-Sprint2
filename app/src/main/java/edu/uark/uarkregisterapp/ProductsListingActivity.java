@@ -4,11 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -16,21 +16,19 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import edu.uark.uarkregisterapp.adapters.ProductListAdapter;
 import edu.uark.uarkregisterapp.models.api.ApiResponse;
 import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.api.Transaction;
-import edu.uark.uarkregisterapp.models.api.TransactionEntry;
 import edu.uark.uarkregisterapp.models.api.services.ProductService;
-import edu.uark.uarkregisterapp.models.transition.EmployeeTransition;
 import edu.uark.uarkregisterapp.models.transition.ProductTransition;
 import edu.uark.uarkregisterapp.models.transition.TransactionEntryTransition;
 
 
 public class ProductsListingActivity extends AppCompatActivity implements ProductListAdapter.ProductEntryCallback {
+    private static final String TAG = "ProductsListingActivity";
     private EditText searchEditText;
 
     private ProductListAdapter.ProductEntryCallback productEntryCallback;
@@ -38,16 +36,30 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
     private ArrayList<TransactionEntryTransition> transactionEntriesTransition;
     private Transaction transaction;
 
+    /**
+     * Very unsure about the logic so this may likely change:
+     * This is the logic behind the creation of a Transaction
+     * When a transaction is started(or the ProductsListingActivity starts), a transaction object will be created. Each product added(when the "add" button is clicked) to the cart will create a transaction entry object.
+     * Each transaction entry object will reference the same transaction reference id that was created from the transaction object.
+     * changing the quantity in each entry in the products list will change the transaction entry objects to modify its individual quantity and individual total price (total price = quantity * product price) of the same product.
+     * This does not include the entire price of all the products in the cart, just the ones of the same product.
+     * The entire price of all the products in the cart will be summed up in the total amount variable in the transaction object.
+     */
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: ****************************************");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products_listing);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         ActionBar actionBar = this.getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // todo fix bug. employee name is not saved in the main activity. the name is usually passed as an employeeTransition object variable. When the back button in toolbar of the products list is clicked, there is no employeeTransition passed to the activity
+        //fix by either requesting the name again from the server or save the name in the login screen as a SharedPreference
+        // if (actionBar != null) {
+        //    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //}
 
         createTransaction();
 
@@ -76,11 +88,13 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
     }
 
     private void createTransaction() {
-        String cashierId = this.getIntent().getParcelableExtra("intent_employeeid");
+        Log.d(TAG, "createTransaction: *******************************************************");
+
         transaction = new Transaction();
-        transaction.setCashierId(cashierId);
+        //String cashierId = this.getIntent().getParcelableExtra("intent_employeeid");
+        //transaction.setCashierId(cashierId);
         this.transactionEntriesTransition = new ArrayList<>();
-        Toast.makeText(ProductsListingActivity.this, "cashier id = " + transaction.getCashierId(), Toast.LENGTH_SHORT).show();
+
     }
 
     private ListView getProductsListView() {
@@ -96,23 +110,35 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
 
     //from ProductEntryCallback interface
     @Override
-    public void onProductEntryAdd(int position, int productCount) {
+    public void onProductEntryAdd(int position) { //productCount is the one specified by the user, using the plus/minus buttons.
+        Log.d(TAG, "onProductEntryAdd: ***************************************");
         Toast.makeText(ProductsListingActivity.this, "test add product at position " + position, Toast.LENGTH_SHORT).show();
         productsInCart.add(this.products.get(position));
 
-        double newPrice = products.get(position).getPrice() * productCount;
-        TransactionEntryTransition newTransactionEntry = new TransactionEntryTransition(transaction.getId(), products.get(position).getLookupCode(), newPrice);
+        TransactionEntryTransition newTransactionEntry = new TransactionEntryTransition(transaction.getId(), products.get(position).getLookupCode(), products.get(position).getPrice()); //quantity will be added when the next button is clicked
         transactionEntriesTransition.add(newTransactionEntry);
 
         //Toast.makeText(this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "TransactionEntryTransition   " +
+                        transactionEntriesTransition.get(0).getRecordId() + "   " +
+                        transactionEntriesTransition.get(0).getLookupCode() + "  " +
+                        transactionEntriesTransition.get(0).getPrice() + " " +
+                        transactionEntriesTransition.get(0).getQuantity() + " " +
+                        transactionEntriesTransition.get(0).getTransactionReferenceId()
+                , Toast.LENGTH_SHORT).show();
+
 
         //todo finish. send TransactionEntries to the confirmation activity
+        //todo figure out the logic behind recordId's. if it is initialized to 0000-0000.... what is going to be sent to the json file? how does the server handle this?
+        //todo fix recordId in server? is the actual recordId created in the server
+        //todo send post request to add a Transaction entry to the database and return its record id. This record id will then be used as the TransactionReferenceId for each transactionEntry object created
+        //todo modify the count and the newPrice in each entry in the transactionEntriesTransition array list
+        Log.i(TAG, "onProductEntryAdd: ");
     }
 
     //from ProductEntryCallback interface
     @Override
     public void onProductEntryRemove(String lookupCode) {
-
         Toast.makeText(this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
         for (int i = 0; i < productsInCart.size(); i++) {
             if (productsInCart.get(i).getLookupCode().equals(lookupCode)) {
@@ -124,22 +150,19 @@ public class ProductsListingActivity extends AppCompatActivity implements Produc
 
     @Override
     public void onProductEntryQuantityUpdate(String lookupCode, int quantity) {
+        Log.i(TAG, "onProductEntryQuantityUpdate: " + lookupCode + " " + quantity + " ************************");
         for (int i = 0; i < transactionEntriesTransition.size(); i++) {
             if (transactionEntriesTransition.get(i).getLookupCode().equals(lookupCode)) {
-                transactionEntriesTransition.remove(i);
+                transactionEntriesTransition.get(i).setQuantity(quantity);
+                Log.i(TAG, "onProductEntryQuantityUpdate: lookupcode=" + transactionEntriesTransition.get(i).getLookupCode() + " quantity = " + transactionEntriesTransition.get(i).getQuantity() + " *******************************");
             }
         }
     }
 
     public void productListNextFAB(View view) {
         Intent confirmationPage = new Intent(ProductsListingActivity.this, ConfirmationScreenActivity.class);
-        //create ProductTransition version of the productsInCart
-        ArrayList<ProductTransition> cart = new ArrayList<>();
-        for (int i = 0; i < productsInCart.size(); i++) {
-            cart.add(new ProductTransition(productsInCart.get(i)));
-        }
-        confirmationPage.putParcelableArrayListExtra("cart", cart);
-//        confirmationPage.putParcelableArrayListExtra("transactionEntryCart", transactionEntriesTransition);
+
+        confirmationPage.putParcelableArrayListExtra("transactionEntryCart", transactionEntriesTransition);
         startActivity(confirmationPage);
     }
 
