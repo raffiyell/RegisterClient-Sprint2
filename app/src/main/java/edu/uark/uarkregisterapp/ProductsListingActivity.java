@@ -116,8 +116,14 @@ public class ProductsListingActivity extends AppCompatActivity {
         Intent confirmationPage = new Intent(ProductsListingActivity.this, ConfirmationScreenActivity.class);
 
         confirmationPage.putExtra("intent_extra_transition", new TransactionTransition(transaction));
-        confirmationPage.putParcelableArrayListExtra("transactionEntryCart", transactionEntriesTransition);
-        startActivity(confirmationPage);
+
+
+        if (transactionEntriesTransition.isEmpty()){
+           Toast.makeText(this, "Cart is empty", Toast.LENGTH_SHORT).show();
+        } else {
+            confirmationPage.putParcelableArrayListExtra("transactionEntryCart", transactionEntriesTransition);
+            startActivity(confirmationPage);
+        }
     }
 
     ///////////////////////////////////////// In progress {
