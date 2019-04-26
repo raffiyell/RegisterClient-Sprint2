@@ -56,4 +56,5 @@
     <string name="intent_extra_product">intent_extra_product</string>
     <string name="title_activity_create_employee">CreateEmployeeActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_order_complete">OrderComplete</string>
 </resources>

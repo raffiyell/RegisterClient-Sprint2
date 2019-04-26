@@ -1,5 +1,6 @@
 package edu.uark.uarkregisterapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -58,25 +59,26 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate: s" + transactionEntryTransitionsCart.get(0).getQuantity() + "s *************************************************");
     }
 
-    private double getTotalPrice(){
+    private double getTotalPrice() {
         totPrice = 0.0;
-        for (TransactionEntryTransition temp: transactionEntryTransitionsCart){
+        for (TransactionEntryTransition temp : transactionEntryTransitionsCart) {
             totPrice += temp.getPrice() * temp.getQuantity();
         }
         return totPrice;
     }
 
-    private void updateTransaction(){
+    private void updateTransaction() {
         int totalItemSold = 0;
 
-        for (TransactionEntryTransition temp: transactionEntryTransitionsCart){
-            totalItemSold +=  temp.getQuantity();
+        for (TransactionEntryTransition temp : transactionEntryTransitionsCart) {
+            totalItemSold += temp.getQuantity();
         }
 
         transactionTransition.setTotalAmount(totPrice);
-       //transactionTransition.setTransactionType();
+        //transactionTransition.setTransactionType();
         transactionTransition.setTotalItemSold(totalItemSold);
     }
+
     public void confirmOrderButton(View view) {
         (new ConfirmTransactionTask()).execute();
     }
@@ -92,19 +94,22 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
 
             processTransactionAlert.show();
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             Transaction transaction = (new Transaction(transactionTransition));
-                    //setId(transactionTransition.getRecordId()).
-                   // setTotalAmount(totPrice).
-                   // setCashierId(transactionTransition.getCashierId())
-                   // ;
-            Log.i(TAG, "doInBackground: " + transactionTransition.getRecordId() +  transactionTransition.getCashierId() +  transactionTransition.getTotalAmount() + "******************************************");
+            //setId(transactionTransition.getRecordId()).
+            // setTotalAmount(totPrice).
+            // setCashierId(transactionTransition.getCashierId())
+            // ;
+            Log.i(TAG, "doInBackground: " + transactionTransition.getRecordId() + transactionTransition.getCashierId() + transactionTransition.getTotalAmount() + "******************************************");
             ApiResponse<Transaction> apiResponse = (new TransactionService()).updateTransaction(transaction);
 
-            if (apiResponse.isValidResponse()){
+            if (apiResponse.isValidResponse()) {
                 processTransactionAlert.dismiss();
-//                Toast.makeText(ConfirmationScreenActivity.this, "Transaction completed", Toast.LENGTH_SHORT).show();
+
+                Intent orderCompletePage = new Intent(ConfirmationScreenActivity.this, OrderComplete.class);
+                startActivity(orderCompletePage);
 
             }
 
@@ -115,7 +120,6 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean successful) {
 
         }
-
 
 
     }

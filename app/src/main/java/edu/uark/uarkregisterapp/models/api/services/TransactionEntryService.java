@@ -22,7 +22,7 @@ import edu.uark.uarkregisterapp.models.api.interfaces.PathElementInterface;
 public class TransactionEntryService extends BaseRemoteService {
     public ApiResponse<TransactionEntry> getTransactionEntry(UUID TransactionEntryId) {
         return this.readTransactionEntryDetailsFromResponse(
-                this.<Transaction>performGetRequest(
+                this.<TransactionEntry>performGetRequest(
                         this.buildPath(TransactionEntryId)
                 )
         );
@@ -57,7 +57,7 @@ public class TransactionEntryService extends BaseRemoteService {
     public ApiResponse<TransactionEntry> updateTransactionEntry(TransactionEntry transactionEntry) {
         return this.readTransactionEntryDetailsFromResponse(
                 this.<TransactionEntry>performPutRequest(
-                        this.buildPath(transactionEntry.getId()),
+                        this.buildPath(transactionEntry.getRecordId()),
                         transactionEntry.convertToJson()
                 )
         );
@@ -65,7 +65,7 @@ public class TransactionEntryService extends BaseRemoteService {
 
     public ApiResponse<TransactionEntry> createTransactionEntry(TransactionEntry transactionEntry) {
         return this.readTransactionEntryDetailsFromResponse(
-                this.<Transaction>performPostRequest(
+                this.<TransactionEntry>performPostRequest(
                         this.buildPath(),
                         transactionEntry.convertToJson()
                 )
@@ -77,7 +77,6 @@ public class TransactionEntryService extends BaseRemoteService {
                 this.buildPath(transactionEntryId)
         );
     }
-
 
     private ApiResponse<TransactionEntry> readTransactionEntryDetailsFromResponse(ApiResponse<TransactionEntry> apiResponse) {
         return this.readDetailsFromResponse(
