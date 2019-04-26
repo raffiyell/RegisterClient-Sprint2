@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="32sp"
-                android:text="Order Successfull" />
+                android:text="Order Successful!" />
 
 
             <android.support.v7.widget.CardView
