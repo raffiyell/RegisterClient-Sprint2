@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void beginTransactionButtonOnClick(View view) {
         Intent beginTransaction = new Intent(MainActivity.this, ProductsListingActivity.class);
-        beginTransaction.putExtra("intent_employeeid", this.employeeTransition.getEmployeeId());
+        beginTransaction.putExtra("intent_employee_id", this.employeeTransition.getEmployeeId());
+
         startActivity(beginTransaction);
     }
 

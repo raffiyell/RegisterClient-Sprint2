@@ -32,6 +32,7 @@ import edu.uark.uarkregisterapp.models.transition.TransactionTransition;
 public class ProductsListingActivity extends AppCompatActivity {
     private static final String TAG = "ProductsListingActivity";
     private EditText searchEditText;
+    private String cashierId;
 
     private ArrayList<TransactionEntryTransition> transactionEntriesTransition; //this will be the cart arraylist.
     private Transaction transaction;
@@ -65,6 +66,8 @@ public class ProductsListingActivity extends AppCompatActivity {
         this.products = new ArrayList<>(); //products in inventory
         this.productListAdapter = new ProductListAdapter(this, this.products, this.transaction, this.transactionEntriesTransition); //"this" is casted into ProductEntryCallback
 
+
+
         this.getProductsListView().setAdapter(this.productListAdapter);
         this.getProductsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -88,6 +91,8 @@ public class ProductsListingActivity extends AppCompatActivity {
     private void createTransaction() {
         Log.d(TAG, "createTransaction: *******************************************************");
         transaction = new Transaction();
+        this.cashierId = getIntent().getStringExtra("intent_employee_id");
+        transaction.setCashierId(this.cashierId);
         this.transactionEntriesTransition = new ArrayList<>(); //cart
 
         (new BeginTransactionTask()).execute();
@@ -239,10 +244,9 @@ public class ProductsListingActivity extends AppCompatActivity {
             if (apiResponse.isValidResponse()) {
                 Log.i(TAG, "doInBackground: valid response from the server ****************************");
                 transaction.setId(apiResponse.getData().getId());
-                Log.i(TAG, "doInBackground: valid response from the server ****************************" + apiResponse.getData().getId() + apiResponse.getData().getCreatedOn() + apiResponse.getData().getCashierId());
+
+                Log.i(TAG, "doInBackground: valid response from the server ****************************" + apiResponse.getData().getId() + apiResponse.getData().getCashierId() + apiResponse.getData().getCreatedOn() + apiResponse.getData().getCashierId());
             }
-
-
             return apiResponse; //return apiResponse instead
         }
 

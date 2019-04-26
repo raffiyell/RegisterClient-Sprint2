@@ -73,7 +73,6 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
             totalItemSold +=  temp.getQuantity();
         }
 
-        transactionTransition.setCashierId("999");
         transactionTransition.setTotalAmount(totPrice);
        //transactionTransition.setTransactionType();
         transactionTransition.setTotalItemSold(totalItemSold);
@@ -96,13 +95,12 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             Transaction transaction = (new Transaction()).
                     setId(transactionTransition.getRecordId()).
-                    setTotalAmount(totPrice);
+                    setTotalAmount(totPrice).
+                    setCashierId(transactionTransition.getCashierId())
+                    ;
+            Log.i(TAG, "doInBackground: " + transactionTransition.getRecordId() +  transactionTransition.getCashierId() +  transactionTransition.getTotalAmount() + "******************************************");
+            ApiResponse<Transaction> apiResponse = (new TransactionService()).updateTransaction(transaction);
 
-            ApiResponse<Transaction> apiResponse = (
-                    (transaction.getId().equals(new UUID(0, 0)))
-                            ? (new TransactionService()).createTransaction(transaction)
-                            : (new TransactionService()).updateTransaction(transaction)
-            );
 
             return apiResponse.isValidResponse();
         }
