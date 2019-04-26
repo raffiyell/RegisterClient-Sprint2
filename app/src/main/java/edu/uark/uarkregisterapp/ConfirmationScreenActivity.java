@@ -52,7 +52,7 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         TextView totalPriceTextView = findViewById(R.id.text_view_total_price_confirmation);
         getTotalPrice();
         updateTransaction();
-        totalPriceTextView.setText("Total price: " + getTotalPrice());
+        totalPriceTextView.setText("Total price: $" + getTotalPrice());
 
         Log.i(TAG, "onCreate: " + transactionTransition.getRecordId() + " " + transactionTransition.getCashierId() + " " + transactionTransition.getCreatedOn() + " " + transactionTransition.getTotalAmount() + " " + transactionTransition.getTotalItemSold() + "***************************************");
         Log.i(TAG, "onCreate: s" + transactionEntryTransitionsCart.get(0).getQuantity() + "s *************************************************");
@@ -82,10 +82,11 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
     }
 
     private class ConfirmTransactionTask extends AsyncTask<Void, Void, Boolean> {
+        AlertDialog processTransactionAlert;
 
         @Override
         protected void onPreExecute() {
-            AlertDialog processTransactionAlert = new AlertDialog.Builder(ConfirmationScreenActivity.this).
+            processTransactionAlert = new AlertDialog.Builder(ConfirmationScreenActivity.this).
                     setMessage("Processing Transaction...").
                     create();
 
@@ -101,16 +102,18 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
             Log.i(TAG, "doInBackground: " + transactionTransition.getRecordId() +  transactionTransition.getCashierId() +  transactionTransition.getTotalAmount() + "******************************************");
             ApiResponse<Transaction> apiResponse = (new TransactionService()).updateTransaction(transaction);
 
+            if (apiResponse.isValidResponse()){
+                processTransactionAlert.dismiss();
+//                Toast.makeText(ConfirmationScreenActivity.this, "Transaction completed", Toast.LENGTH_SHORT).show();
+
+            }
 
             return apiResponse.isValidResponse();
         }
 
         @Override
         protected void onPostExecute(Boolean successful) {
-            AlertDialog completeTransactionAlert = new AlertDialog.Builder(ConfirmationScreenActivity.this).
-                    setMessage("Processing Transaction").
-                    create();
-            completeTransactionAlert.show();
+
         }
 
 

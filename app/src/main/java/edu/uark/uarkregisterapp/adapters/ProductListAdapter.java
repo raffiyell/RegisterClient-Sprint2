@@ -143,7 +143,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             }
 
             if (holder.priceTextView != null) {
-                holder.priceTextView.setText(product.getPrice() + " ");
+                holder.priceTextView.setText("$ " + product.getPrice() + " ");
             }
         }
         return view;
