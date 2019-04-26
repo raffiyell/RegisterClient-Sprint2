@@ -93,11 +93,11 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            Transaction transaction = (new Transaction()).
-                    setId(transactionTransition.getRecordId()).
-                    setTotalAmount(totPrice).
-                    setCashierId(transactionTransition.getCashierId())
-                    ;
+            Transaction transaction = (new Transaction(transactionTransition));
+                    //setId(transactionTransition.getRecordId()).
+                   // setTotalAmount(totPrice).
+                   // setCashierId(transactionTransition.getCashierId())
+                   // ;
             Log.i(TAG, "doInBackground: " + transactionTransition.getRecordId() +  transactionTransition.getCashierId() +  transactionTransition.getTotalAmount() + "******************************************");
             ApiResponse<Transaction> apiResponse = (new TransactionService()).updateTransaction(transaction);
 

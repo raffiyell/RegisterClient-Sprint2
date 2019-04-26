@@ -15,6 +15,7 @@ import edu.uark.uarkregisterapp.models.api.fields.EmployeeFieldName;
 import edu.uark.uarkregisterapp.models.api.fields.TransactionFieldName;
 import edu.uark.uarkregisterapp.models.api.interfaces.ConvertToJsonInterface;
 import edu.uark.uarkregisterapp.models.api.interfaces.LoadFromJsonInterface;
+import edu.uark.uarkregisterapp.models.transition.TransactionTransition;
 
 public class Transaction implements ConvertToJsonInterface, LoadFromJsonInterface<Transaction> {
     private UUID recordId;
@@ -142,5 +143,15 @@ public class Transaction implements ConvertToJsonInterface, LoadFromJsonInterfac
         this.transactionType = StringUtils.EMPTY;
         this.referenceId = new UUID(0, 0);
         this.totalItemSold = 0;
+    }
+
+    public Transaction(TransactionTransition transactionTransition) {
+        this.recordId = transactionTransition.getRecordId();
+        this.createdOn = transactionTransition.getCreatedOn();
+        this.cashierId = transactionTransition.getCashierId();
+        this.totalAmount = transactionTransition.getTotalAmount();
+        this.transactionType = transactionTransition.getTransactionType();
+        this.referenceId = transactionTransition.getReferenceId();
+        this.totalItemSold = transactionTransition.getTotalItemSold();
     }
 }
