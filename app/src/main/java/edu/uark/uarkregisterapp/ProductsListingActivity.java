@@ -23,8 +23,10 @@ import edu.uark.uarkregisterapp.models.api.ApiResponse;
 import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.api.Transaction;
 import edu.uark.uarkregisterapp.models.api.services.ProductService;
+import edu.uark.uarkregisterapp.models.api.services.TransactionService;
 import edu.uark.uarkregisterapp.models.transition.ProductTransition;
 import edu.uark.uarkregisterapp.models.transition.TransactionEntryTransition;
+import edu.uark.uarkregisterapp.models.transition.TransactionTransition;
 
 
 public class ProductsListingActivity extends AppCompatActivity {
@@ -87,6 +89,8 @@ public class ProductsListingActivity extends AppCompatActivity {
         Log.d(TAG, "createTransaction: *******************************************************");
         transaction = new Transaction();
         this.transactionEntriesTransition = new ArrayList<>(); //cart
+
+        (new BeginTransactionTask()).execute();
         //todo figure out the logic behind recordId's. if it is initialized to 0000-0000.... what is going to be sent to the json file? how does the server handle this?
         //todo fix recordId in server? is the actual recordId created in the server
         //todo send post request to add a Transaction entry to the database and return its record id. This record id will then be used as the TransactionReferenceId for each transactionEntry object created
@@ -106,6 +110,7 @@ public class ProductsListingActivity extends AppCompatActivity {
     public void productListNextFAB(View view) {
         Intent confirmationPage = new Intent(ProductsListingActivity.this, ConfirmationScreenActivity.class);
 
+        confirmationPage.putExtra("intent_extra_transition", new TransactionTransition(transaction));
         confirmationPage.putParcelableArrayListExtra("transactionEntryCart", transactionEntriesTransition);
         startActivity(confirmationPage);
     }
@@ -218,6 +223,37 @@ public class ProductsListingActivity extends AppCompatActivity {
                     create();
         }
     }
+
+    //we need to create a Transaction in the database and return its record id. This record id will be used for the transactionEntry objects
+    //we need the server to return the Transaction object that was created in the server, with its new record id
+    private class BeginTransactionTask extends AsyncTask<Void, Void, ApiResponse<Transaction>> {
+        @Override
+        protected void onPreExecute() {
+            Log.i(TAG, "onPreExecute: BeginTransaction*******************");
+        }
+
+        @Override
+        protected ApiResponse<Transaction> doInBackground(Void... voids) {
+            ApiResponse<Transaction> apiResponse = (new TransactionService()).createTransaction(transaction);
+
+            if (apiResponse.isValidResponse()) {
+                Log.i(TAG, "doInBackground: valid response from the server ****************************");
+                transaction.setId(apiResponse.getData().getId());
+                Log.i(TAG, "doInBackground: valid response from the server ****************************" + apiResponse.getData().getId() + apiResponse.getData().getCreatedOn() + apiResponse.getData().getCashierId());
+            }
+
+
+            return apiResponse; //return apiResponse instead
+        }
+
+        @Override
+        protected void onPostExecute(ApiResponse<Transaction> apiResponse) {
+            if (apiResponse.isValidResponse()) {
+                Log.i(TAG, "onPostExecute: transaction created in the server ***************");
+            }
+        }
+    }
+
 
     private List<Product> products;
     private ProductListAdapter productListAdapter;

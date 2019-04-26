@@ -37,6 +37,7 @@
         app:cardUseCompatPadding="true"
         >
         <TextView
+            android:onClick="confirmOrderButton"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="Confirm Order"

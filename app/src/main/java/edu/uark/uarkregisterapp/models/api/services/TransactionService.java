@@ -1,10 +1,17 @@
 package edu.uark.uarkregisterapp.models.api.services;
 
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import edu.uark.uarkregisterapp.models.api.ApiResponse;
+import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.api.Transaction;
 import edu.uark.uarkregisterapp.models.api.enums.ApiObject;
 import edu.uark.uarkregisterapp.models.api.enums.TransactionApiMethod;
@@ -18,6 +25,31 @@ public class TransactionService extends BaseRemoteService {
 				this.buildPath(TransactionId)
 			)
 		);
+	}
+
+	//only for testing. will not be used officially
+	public ApiResponse<List<Transaction>> getTransactions() {
+		ApiResponse<List<Transaction>> apiResponse = this.performGetRequest(
+				this.buildPath()
+		);
+
+		JSONArray rawJsonArray = this.rawResponseToJSONArray(apiResponse.getRawResponse());
+		if (rawJsonArray != null) {
+			ArrayList<Transaction> transactions = new ArrayList<>(rawJsonArray.length());
+			for (int i = 0; i < rawJsonArray.length(); i++) {
+				try {
+					transactions.add((new Transaction()).loadFromJson(rawJsonArray.getJSONObject(i)));
+				} catch (JSONException e) {
+					Log.d("GET TRANSACTIONS", e.getMessage());
+				}
+			}
+
+			apiResponse.setData(transactions);
+		} else {
+			apiResponse.setData(new ArrayList<Transaction>(0));
+		}
+
+		return apiResponse;
 	}
 
 

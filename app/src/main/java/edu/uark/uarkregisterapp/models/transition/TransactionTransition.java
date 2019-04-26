@@ -108,7 +108,6 @@ public class TransactionTransition implements Parcelable {
         }
     };
 
-
     public TransactionTransition() {
         this.recordId = new UUID(0, 0);
         this.cashierId = StringUtils.EMPTY;
