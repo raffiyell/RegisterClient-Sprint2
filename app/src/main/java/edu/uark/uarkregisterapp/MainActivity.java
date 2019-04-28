@@ -45,16 +45,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        speak();
     }
 
-    public void speak() {
-        String message = "Welcome " + this.employeeTransition.getFirstName() + ". to UARK Register App";
+    public void speak(String message) {
+
         if (message.isEmpty())
             Toast.makeText(MainActivity.this, "Enter message first", Toast.LENGTH_SHORT).show();
-        else
+        else {
             textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
-       /// textToSpeech.setSpeechRate()
+            /// textToSpeech.setSpeechRate()
+            Toast.makeText(MainActivity.this, "blabla voice", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Override
@@ -74,27 +76,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void beginTransactionButtonOnClick(View view) {
+
         Intent beginTransaction = new Intent(MainActivity.this, ProductsListingActivity.class);
         beginTransaction.putExtra("intent_employee_id", this.employeeTransition.getEmployeeId());
         beginTransaction.putExtra("intent_extra_employee", this.employeeTransition);
+
+        speak("Please select items from the product list");
         startActivity(beginTransaction);
     }
 
     public void productSalesReportButtonOnClick(View view) {
         this.displayFunctionalityNotAvailableDialog();
+        speak("report: product");
     }
 
     public void cashierSalesReportButtonOnClick(View view) {
         this.displayFunctionalityNotAvailableDialog();
+
+        speak("report: cashier");
     }
 
     public void createEmployeeButtonOnClick(View view) {
         startActivity(new Intent(getApplicationContext(), CreateEmployeeActivity.class));
 
+        speak("Please fill out the appropriate employee information");
     }
 
     public void logOutButtonOnClick(View view) {
         this.startActivity(new Intent(getApplicationContext(), LandingActivity.class));
+        speak("Logging out");
     }
 
     private TextView getEmployeeWelcomeTextView() {

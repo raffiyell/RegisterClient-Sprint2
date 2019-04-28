@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import edu.uark.uarkregisterapp.R.*;
@@ -37,7 +39,7 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
     private ArrayList<Product> products; //products from server
     private ArrayList<Product> updatedProducts; //products with updated count
     private double totPrice;
-
+    private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +62,38 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         updateTransaction();
         totalPriceTextView.setText("Total price: $" + getTotalPrice());
 
+
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int res = textToSpeech.setLanguage(Locale.ENGLISH);
+                    if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.i(TAG, "onInit: Language not supported");
+                    }
+                } else {
+                    Log.i(TAG, "onInit: init not successful");
+                }
+            }
+        });
+
     }
 
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
+    }
+
+
+    private void speak(){
+        String message = "Your transaction has been completed successfully ";
+        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+
+    }
     private double getTotalPrice() {
         totPrice = 0.0;
         for (TransactionEntryTransition temp : transactionEntryTransitionsCart) {
@@ -138,6 +170,7 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
 
                 Intent orderCompletePage = new Intent(ConfirmationScreenActivity.this, OrderComplete.class);
                 orderCompletePage.putExtra("intent_extra_employee", ConfirmationScreenActivity.this.getIntent().getParcelableExtra("intent_extra_employee"));
+                speak();
                 startActivity(orderCompletePage);
             }
 

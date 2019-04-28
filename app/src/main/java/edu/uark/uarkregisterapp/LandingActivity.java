@@ -4,12 +4,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Locale;
 
 import edu.uark.uarkregisterapp.models.api.ApiResponse;
 import edu.uark.uarkregisterapp.models.api.Employee;
@@ -18,11 +23,27 @@ import edu.uark.uarkregisterapp.models.api.services.EmployeeService;
 import edu.uark.uarkregisterapp.models.transition.EmployeeTransition;
 
 public class LandingActivity extends AppCompatActivity {
-
+	private static final String TAG = "LandingActivity";
+	private TextToSpeech textToSpeech;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_landing);
+
+		textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+			@Override
+			public void onInit(int status) {
+				if (status == TextToSpeech.SUCCESS) {
+					int res = textToSpeech.setLanguage(Locale.ENGLISH);
+					if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
+						Log.i(TAG, "onInit: Language not supported");
+					}
+				} else {
+					Log.i(TAG, "onInit: init not successful");
+				}
+			}
+		});
+
 	}
 
 	@Override
@@ -32,6 +53,18 @@ public class LandingActivity extends AppCompatActivity {
 		(new QueryActiveEmployeeExistsTask()).execute();
 	}
 
+	@Override
+	protected void onDestroy() {
+		if (textToSpeech != null) {
+			textToSpeech.stop();
+			textToSpeech.shutdown();
+		}
+		super.onDestroy();
+	}
+
+	public void speak(String message) {
+			textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+	}
 	public void signInButtonOnClick(View view) {
 		if (StringUtils.isBlank(this.getEmployeeIdEditText().getText().toString())) {
 			new AlertDialog.Builder(this)
@@ -128,6 +161,7 @@ public class LandingActivity extends AppCompatActivity {
 				return;
 			}
 
+
 			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
 			intent.putExtra(
@@ -135,6 +169,7 @@ public class LandingActivity extends AppCompatActivity {
 				, new EmployeeTransition(apiResponse.getData())
 			);
 
+			speak("Welcome " + apiResponse.getData().getFirstName() + " to UARK Register App");
 			startActivity(intent);
 		}
 

@@ -1,6 +1,8 @@
 package edu.uark.uarkregisterapp.adapters;
 
 import android.content.Context;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -9,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
 
+import edu.uark.uarkregisterapp.MainActivity;
 import edu.uark.uarkregisterapp.R;
 import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.api.Transaction;
@@ -22,15 +26,40 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     private static final String TAG = "ProductListAdapter";
     private List<TransactionEntryTransition> transactionEntryTransitionCart;
     private Transaction transaction;
+    private TextToSpeech textToSpeech;
+    //private String messageTTS;
 
     public ProductListAdapter(Context context, List<Product> products, Transaction transaction, List<TransactionEntryTransition> transactionEntryTransition) {
         super(context, R.layout.list_view_item_product, products);
         this.transaction = transaction;
         this.transactionEntryTransitionCart = transactionEntryTransition;
+
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int res = textToSpeech.setLanguage(Locale.ENGLISH);
+                    if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
+
+                    }
+                } else {
+                }
+            }
+        });
     }
 
     public ProductListAdapter(Context context, List<Product> products) {
         super(context, R.layout.list_view_item_product, products);
+    }
+
+    public void speak(String message) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+        } else {
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+        }
+
     }
 
     @NonNull
@@ -65,6 +94,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                     int newQuantity = transactionEntryTemp.getQuantity() + 1;
                     transactionEntryTemp.setQuantity(newQuantity);
                     holder.cartProductQuantity.setText(transactionEntryTemp.getQuantity() + " ");
+                    speak(transactionEntryTemp.getQuantity() + " ");
                 }
             });
             holder.minusCardView.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +107,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                         newQuantity = 1;
                     transactionEntryTemp.setQuantity(newQuantity);
                     holder.cartProductQuantity.setText(transactionEntryTemp.getQuantity() + "");
+                    speak(transactionEntryTemp.getQuantity() + " ");
                 }
             });
 
@@ -85,6 +116,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                 public void onClick(View v) {
                     Product tempProduct = ProductListAdapter.this.getItem(position);
 
+                    speak("Removing " + tempProduct.getLookupCode() + " from cart ");
                     if (!cartHasProduct(tempProduct.getLookupCode())) { // makes sure nothing is removed if the product count is already 0. product is only removed in the cart if it is already added
                         Log.i(TAG, "onClick: product not found in cart. cannot remove anything ************");
                         //do nothing
@@ -107,8 +139,9 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                             ProductListAdapter.this.getItem(position).getLookupCode(),
                             ProductListAdapter.this.getItem(position).getPrice()); //quantity will be added when the next button is clicked
 
-                    if (cartHasProduct(newTransactionEntry.getLookupCode()))
-                    {
+
+                    speak("Adding " + ProductListAdapter.this.getItem(position).getLookupCode() + " to cart ");
+                    if (cartHasProduct(newTransactionEntry.getLookupCode())) {
                         Log.i(TAG, "onClick: product already in cart *************************");
                         //product already in cart.
                         //do nothing to prevent redundancy
@@ -129,6 +162,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                     }
                 }
             });
+
+
         }
 
         if (product != null) {
@@ -151,17 +186,17 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         return view;
     }
 
-    private int getPositionFromCart(String lookupCode){
-        for (TransactionEntryTransition temp: transactionEntryTransitionCart) {
-            if(temp.getLookupCode().equals(lookupCode))
+    private int getPositionFromCart(String lookupCode) {
+        for (TransactionEntryTransition temp : transactionEntryTransitionCart) {
+            if (temp.getLookupCode().equals(lookupCode))
                 return transactionEntryTransitionCart.indexOf(temp);
         }
         return -1;
     }
 
     private boolean cartHasProduct(String lookupCode) {
-        for (TransactionEntryTransition temp: transactionEntryTransitionCart) {
-            if(temp.getLookupCode().equals(lookupCode))
+        for (TransactionEntryTransition temp : transactionEntryTransitionCart) {
+            if (temp.getLookupCode().equals(lookupCode))
                 return true;
         }
         return false;
