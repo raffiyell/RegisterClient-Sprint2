@@ -6,9 +6,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 public class OrderComplete extends AppCompatActivity {
+
+    private static final String TAG = "OrderComplete";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +24,12 @@ public class OrderComplete extends AppCompatActivity {
     }
 
     public void returnToMain(View view){
-        Intent returntomain =new Intent(OrderComplete.this, MainActivity.class);
-        //startActivity(returntomain);
+        Log.i(TAG, "returnToMain: *********************" + this.getIntent().getParcelableExtra("intent_extra_employee").toString() );
+
+        Intent returnToMain =new Intent(OrderComplete.this, MainActivity.class);
+        returnToMain.putExtra(
+                "intent_extra_employee", this.getIntent().getParcelableExtra("intent_extra_employee"));
+        startActivity(returnToMain);
 
     }
 

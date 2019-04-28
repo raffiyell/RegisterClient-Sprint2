@@ -7,12 +7,18 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import edu.uark.uarkregisterapp.models.transition.EmployeeTransition;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
+    private EmployeeTransition employeeTransition;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         this.employeeTransition = this.getIntent().getParcelableExtra(this.getString(R.string.intent_extra_employee));
+
     }
 
     @Override
@@ -32,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public void beginTransactionButtonOnClick(View view) {
         Intent beginTransaction = new Intent(MainActivity.this, ProductsListingActivity.class);
         beginTransaction.putExtra("intent_employee_id", this.employeeTransition.getEmployeeId());
-
+        beginTransaction.putExtra("intent_extra_employee", this.employeeTransition);
         startActivity(beginTransaction);
     }
 
@@ -72,25 +79,23 @@ public class MainActivity extends AppCompatActivity {
                 show();
     }
 
-    /**TODO finish this so the the employee name and id will be saved on the device. When the back button is pressed from the productslistingactivity is clicked, the name and id can be retrieved again
-     *
-     * private void saveSharedPreference() {
+    //TODO finish this so the the employee name and id will be saved on the device. When the back button is pressed from the productslistingactivity is clicked, the name and id can be retrieved again
+
+    private void saveSharedPreference() {
 
         SharedPreferences sharedPreferences = getSharedPreferences("Employee", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("name", );
+        editor.putString("employeeid", this.employeeTransition.getEmployeeId());
         editor.apply();
 
     }
 
 
     private void loadSharedPreference() {
-
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         String loadedDateFormat = sharedPreferences.getString("DateFormat", "N/A");
 
     }
-     **/
 
-    private EmployeeTransition employeeTransition;
+
 }

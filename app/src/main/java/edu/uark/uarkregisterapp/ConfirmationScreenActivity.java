@@ -109,6 +109,8 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
                 processTransactionAlert.dismiss();
 
                 Intent orderCompletePage = new Intent(ConfirmationScreenActivity.this, OrderComplete.class);
+                orderCompletePage.putExtra(
+                        "intent_extra_employee", ConfirmationScreenActivity.this.getIntent().getParcelableExtra("intent_extra_employee"));
                 startActivity(orderCompletePage);
 
             }

@@ -20,6 +20,8 @@ import edu.uark.uarkregisterapp.models.api.interfaces.LoadFromJsonInterface;
 import edu.uark.uarkregisterapp.models.api.interfaces.PathElementInterface;
 
 public class TransactionEntryService extends BaseRemoteService {
+    private static final String TAG = "TransactionEntryService";
+
     public ApiResponse<TransactionEntry> getTransactionEntry(UUID TransactionEntryId) {
         return this.readTransactionEntryDetailsFromResponse(
                 this.<TransactionEntry>performGetRequest(
@@ -29,23 +31,23 @@ public class TransactionEntryService extends BaseRemoteService {
     }
 
     //only for testing. will not be used officially
-    public ApiResponse<List<TransactionEntry>> getTransactionsEntry() {
+    public ApiResponse<List<TransactionEntry>> getTransactionEntries() {
         ApiResponse<List<TransactionEntry>> apiResponse = this.performGetRequest(
                 this.buildPath()
         );
 
         JSONArray rawJsonArray = this.rawResponseToJSONArray(apiResponse.getRawResponse());
         if (rawJsonArray != null) {
-            ArrayList<TransactionEntry> transactionsEntries = new ArrayList<>(rawJsonArray.length());
+            ArrayList<TransactionEntry> transactionEntries = new ArrayList<>(rawJsonArray.length());
             for (int i = 0; i < rawJsonArray.length(); i++) {
                 try {
-                    transactionsEntries.add((new TransactionEntry()).loadFromJson(rawJsonArray.getJSONObject(i)));
+                    transactionEntries.add((new TransactionEntry()).loadFromJson(rawJsonArray.getJSONObject(i)));
                 } catch (JSONException e) {
-                    Log.d("GET TRANSACTIONS", e.getMessage());
+                    Log.d(TAG, e.getMessage());
                 }
             }
 
-            apiResponse.setData(transactionsEntries);
+            apiResponse.setData(transactionEntries);
         } else {
             apiResponse.setData(new ArrayList<TransactionEntry>(0));
         }

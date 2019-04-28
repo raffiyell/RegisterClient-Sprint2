@@ -24,6 +24,7 @@ import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.api.Transaction;
 import edu.uark.uarkregisterapp.models.api.services.ProductService;
 import edu.uark.uarkregisterapp.models.api.services.TransactionService;
+import edu.uark.uarkregisterapp.models.transition.EmployeeTransition;
 import edu.uark.uarkregisterapp.models.transition.ProductTransition;
 import edu.uark.uarkregisterapp.models.transition.TransactionEntryTransition;
 import edu.uark.uarkregisterapp.models.transition.TransactionTransition;
@@ -32,7 +33,6 @@ import edu.uark.uarkregisterapp.models.transition.TransactionTransition;
 public class ProductsListingActivity extends AppCompatActivity {
     private static final String TAG = "ProductsListingActivity";
     private EditText searchEditText;
-    private String cashierId;
 
     private ArrayList<TransactionEntryTransition> transactionEntriesTransition; //this will be the cart arraylist.
     private Transaction transaction;
@@ -54,19 +54,10 @@ public class ProductsListingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_products_listing);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        ActionBar actionBar = this.getSupportActionBar();
-        // todo fix bug. employee name is not saved in the main activity. the name is usually passed as an employeeTransition object variable. When the back button in toolbar of the products list is clicked, there is no employeeTransition passed to the activity
-        //fix by either requesting the name again from the server or save the name in the login screen as a SharedPreference
-        // if (actionBar != null) {
-        //    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //}
-
         createTransaction();
 
         this.products = new ArrayList<>(); //products in inventory
         this.productListAdapter = new ProductListAdapter(this, this.products, this.transaction, this.transactionEntriesTransition); //"this" is casted into ProductEntryCallback
-
-
 
         this.getProductsListView().setAdapter(this.productListAdapter);
         this.getProductsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -91,14 +82,9 @@ public class ProductsListingActivity extends AppCompatActivity {
     private void createTransaction() {
         Log.d(TAG, "createTransaction: *******************************************************");
         transaction = new Transaction();
-        this.cashierId = getIntent().getStringExtra("intent_employee_id");
-        transaction.setCashierId(this.cashierId);
+        transaction.setCashierId(getIntent().getStringExtra("intent_employee_id"));
         this.transactionEntriesTransition = new ArrayList<>(); //cart
-
         (new BeginTransactionTask()).execute();
-        //todo figure out the logic behind recordId's. if it is initialized to 0000-0000.... what is going to be sent to the json file? how does the server handle this?
-        //todo fix recordId in server? is the actual recordId created in the server
-        //todo send post request to add a Transaction entry to the database and return its record id. This record id will then be used as the TransactionReferenceId for each transactionEntry object created
     }
 
     private ListView getProductsListView() {
@@ -110,18 +96,20 @@ public class ProductsListingActivity extends AppCompatActivity {
         String searchId = searchEditText.getText().toString();
         //	searchId.addTextChangedListener
         (new searchingTask(searchId)).execute();
+        //todo fix bug: wrong lookup code is displayed on the search result
     }
 
     public void productListNextFAB(View view) {
         Intent confirmationPage = new Intent(ProductsListingActivity.this, ConfirmationScreenActivity.class);
-
         confirmationPage.putExtra("intent_extra_transition", new TransactionTransition(transaction));
 
 
-        if (transactionEntriesTransition.isEmpty()){
-           Toast.makeText(this, "Cart is empty", Toast.LENGTH_SHORT).show();
+        if (transactionEntriesTransition.isEmpty()) {
+            Toast.makeText(this, "Cart is empty", Toast.LENGTH_SHORT).show();
         } else {
             confirmationPage.putParcelableArrayListExtra("transactionEntryCart", transactionEntriesTransition);
+            confirmationPage.putExtra(
+                    "intent_extra_employee", this.getIntent().getParcelableExtra("intent_extra_employee"));
             startActivity(confirmationPage);
         }
     }
@@ -142,8 +130,11 @@ public class ProductsListingActivity extends AppCompatActivity {
             if (apiResponse.isValidResponse()) {
                 products.clear();
                 products.add(apiResponse.getData());
-            }
+                Log.i(TAG, "doInBackground: " + apiResponse.getData().getLookupCode() + " " + apiResponse.getData().getCount() + "***************************");
 
+                //test
+                //products.add(new Product());
+            }
             return apiResponse;
         }
 
@@ -151,6 +142,7 @@ public class ProductsListingActivity extends AppCompatActivity {
         protected void onPostExecute(ApiResponse<Product> apiResponse) {
             if (apiResponse.isValidResponse()) {
                 productListAdapter.notifyDataSetChanged();
+
             }
 
             this.searchingProductsAlert.dismiss();
@@ -251,7 +243,7 @@ public class ProductsListingActivity extends AppCompatActivity {
                 Log.i(TAG, "doInBackground: valid response from the server ****************************");
                 transaction.setId(apiResponse.getData().getId());
 
-                Log.i(TAG, "doInBackground: valid response from the server ****************************" + apiResponse.getData().getId() + apiResponse.getData().getCashierId() + apiResponse.getData().getCreatedOn() + apiResponse.getData().getCashierId());
+               // Log.i(TAG, "doInBackground: valid response from the server ****************************" + apiResponse.getData().getId() + apiResponse.getData().getCashierId() + apiResponse.getData().getCreatedOn() + apiResponse.getData().getCashierId());
             }
             return apiResponse; //return apiResponse instead
         }
