@@ -131,6 +131,7 @@ public class ProductsListingActivity extends AppCompatActivity {
                 products.clear();
                 products.add(apiResponse.getData());
                 Log.i(TAG, "doInBackground: " + apiResponse.getData().getLookupCode() + " " + apiResponse.getData().getCount() + "***************************");
+                Log.i(TAG, "doInBackground: " + products.get(0).getLookupCode() + " " + products.get(0).getCount() + "***************************");
 
                 //test
                 //products.add(new Product());

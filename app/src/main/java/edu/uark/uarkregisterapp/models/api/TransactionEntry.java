@@ -104,12 +104,14 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
         JSONObject jsonObject = new JSONObject();
 
         try {
-            jsonObject.put(TransactionEntryFieldName.RECORD_ID.getFieldName(), this.recordId.toString());
+//            jsonObject.put(TransactionEntryFieldName.RECORD_ID.getFieldName(), this.recordId.toString());
+            jsonObject.put(TransactionEntryFieldName.RECORD_ID.getFieldName(), null); //this is not the right way to do this
             jsonObject.put(TransactionEntryFieldName.PRODUCT_LOOKUP_CODE.getFieldName(), this.productLookupCode);
             jsonObject.put(TransactionEntryFieldName.QUANTITY.getFieldName(), this.quantity);
             jsonObject.put(TransactionEntryFieldName.PRICE.getFieldName(), this.price);
             jsonObject.put(TransactionEntryFieldName.TRANSACTION_REFERENCE_ID.getFieldName(), this.transactionReferenceId);
-            jsonObject.put(TransactionEntryFieldName.CREATED_ON.getFieldName(), this.createdOn);
+           // jsonObject.put(TransactionEntryFieldName.CREATED_ON.getFieldName(), null);
+            jsonObject.put(TransactionEntryFieldName.CREATED_ON.getFieldName(), null); //this is not the right way to do this
         } catch (JSONException e) {
             e.printStackTrace();
         }

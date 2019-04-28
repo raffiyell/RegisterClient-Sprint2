@@ -4,11 +4,11 @@ import edu.uark.uarkregisterapp.models.api.interfaces.FieldNameInterface;
 
 public enum TransactionEntryFieldName implements FieldNameInterface {
 
-    RECORD_ID("recordid"),
-    PRODUCT_LOOKUP_CODE("productlookupcode"),
+    RECORD_ID("id"),
+    PRODUCT_LOOKUP_CODE("lookupCode"),
     QUANTITY("quantity"),
     PRICE("price"),
-    TRANSACTION_REFERENCE_ID("transactionreferenceid"),
+    TRANSACTION_REFERENCE_ID("referenceId"),
     CREATED_ON("createdOn");
 
     private String fieldName;
