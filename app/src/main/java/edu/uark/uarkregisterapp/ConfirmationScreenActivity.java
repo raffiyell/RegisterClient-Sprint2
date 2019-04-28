@@ -19,7 +19,9 @@ import edu.uark.uarkregisterapp.adapters.ConfirmationListAdapter;
 import edu.uark.uarkregisterapp.models.api.ApiResponse;
 import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.api.Transaction;
+import edu.uark.uarkregisterapp.models.api.TransactionEntry;
 import edu.uark.uarkregisterapp.models.api.services.ProductService;
+import edu.uark.uarkregisterapp.models.api.services.TransactionEntryService;
 import edu.uark.uarkregisterapp.models.api.services.TransactionService;
 import edu.uark.uarkregisterapp.models.transition.TransactionEntryTransition;
 import edu.uark.uarkregisterapp.models.transition.TransactionTransition;
@@ -98,21 +100,33 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             Transaction transaction = (new Transaction(transactionTransition));
-            //setId(transactionTransition.getRecordId()).
-            // setTotalAmount(totPrice).
-            // setCashierId(transactionTransition.getCashierId())
-            // ;
+
+            //for (int i = 0; i < transactionEntryTransitionsCart.size(); i ++){
+            //    TransactionEntry transactionEntry = (new TransactionEntry(ConfirmationScreenActivity.this.transactionEntryTransitionsCart.get(0)));
+            //    ApiResponse<TransactionEntry> apiResponseCart = (new TransactionEntryService()).createTransactionEntry(transactionEntry);
+            //    if (apiResponseCart.isValidResponse()){
+            //        Log.i(TAG, "doInBackground: TransactionEntry successfully sent to the server");
+            //    }
+            //}
+
+
+            //testing. must send the entire transaction entry array in the actual implementation
+            TransactionEntry transactionEntry = (new TransactionEntry(ConfirmationScreenActivity.this.transactionEntryTransitionsCart.get(0)));
+            ApiResponse<TransactionEntry> apiResponseCart = (new TransactionEntryService()).createTransactionEntry(transactionEntry);
+
+            if (apiResponseCart.isValidResponse()){
+                Log.i(TAG, "doInBackground: TransactionEntry successfully sent to the server");
+            }
+            
+            
             Log.i(TAG, "doInBackground: " + transactionTransition.getRecordId() + transactionTransition.getCashierId() + transactionTransition.getTotalAmount() + "******************************************");
             ApiResponse<Transaction> apiResponse = (new TransactionService()).updateTransaction(transaction);
-
             if (apiResponse.isValidResponse()) {
                 processTransactionAlert.dismiss();
 
                 Intent orderCompletePage = new Intent(ConfirmationScreenActivity.this, OrderComplete.class);
-                orderCompletePage.putExtra(
-                        "intent_extra_employee", ConfirmationScreenActivity.this.getIntent().getParcelableExtra("intent_extra_employee"));
+                orderCompletePage.putExtra( "intent_extra_employee", ConfirmationScreenActivity.this.getIntent().getParcelableExtra("intent_extra_employee"));
                 startActivity(orderCompletePage);
-
             }
 
             return apiResponse.isValidResponse();

@@ -13,6 +13,7 @@ import java.util.UUID;
 import edu.uark.uarkregisterapp.models.api.fields.TransactionEntryFieldName;
 import edu.uark.uarkregisterapp.models.api.interfaces.ConvertToJsonInterface;
 import edu.uark.uarkregisterapp.models.api.interfaces.LoadFromJsonInterface;
+import edu.uark.uarkregisterapp.models.transition.TransactionEntryTransition;
 
 public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInterface<TransactionEntry> {
 
@@ -132,6 +133,15 @@ public class TransactionEntry implements ConvertToJsonInterface, LoadFromJsonInt
         this.productLookupCode = productLookupCode;
         this.price = price;
         this.quantity = 0;
+    }
+
+    public TransactionEntry(TransactionEntryTransition transactionEntryTransition){
+        this.recordId = transactionEntryTransition.getRecordId();
+        this.createdOn = transactionEntryTransition.getCreatedOn();
+        this.productLookupCode = transactionEntryTransition.getLookupCode();
+        this.price = transactionEntryTransition.getPrice();
+        this.quantity = transactionEntryTransition.getQuantity();
+        this.transactionReferenceId = transactionEntryTransition.getTransactionReferenceId();
     }
 
 
