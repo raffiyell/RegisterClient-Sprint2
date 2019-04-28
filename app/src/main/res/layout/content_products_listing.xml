@@ -17,25 +17,58 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <android.support.v7.widget.CardView
+            android:id="@+id/decrementCardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Product Details" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
 
-        <EditText
-            android:id="@+id/editTextSearchById"
+            android:stateListAnimator="@animator/elevate_button"
+            app:cardCornerRadius="18dp"
+            app:cardUseCompatPadding="true">
+
+            <EditText
+
+                android:id="@+id/editTextSearchById"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="Search by ID"
+                android:textAlignment="center" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/incrementCardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Search by ID"
-            android:textAlignment="center" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_height="51dp"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:backgroundTint="#2196F3"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center|center_horizontal"
             android:onClick="searchButton"
-            android:text="Search" />
+            android:stateListAnimator="@animator/elevate_button"
+            app:cardCornerRadius="18dp"
+            app:cardUseCompatPadding="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_search_white_24dp" />
+        </android.support.v7.widget.CardView>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -49,7 +82,6 @@
             android:layout_weight="1"
             android:text="Lookup Code"
             android:textAlignment="center" />
-
 
 
         <TextView
@@ -70,7 +102,6 @@
 
 
     <ListView
-        android:divider="@null"
         android:id="@+id/list_view_products_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -78,8 +109,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:paddingBottom="50dp"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:paddingBottom="50dp" />
 
 
 </LinearLayout>
