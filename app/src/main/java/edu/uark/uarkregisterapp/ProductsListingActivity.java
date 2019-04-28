@@ -68,6 +68,7 @@ public class ProductsListingActivity extends AppCompatActivity {
                         getString(R.string.intent_extra_product),
                         new ProductTransition((Product) getProductsListView().getItemAtPosition(position))
                 );
+
                 startActivity(intent);
             }
         });

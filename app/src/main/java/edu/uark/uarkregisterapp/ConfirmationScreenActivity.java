@@ -1,5 +1,6 @@
 package edu.uark.uarkregisterapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import edu.uark.uarkregisterapp.R.*;
@@ -32,6 +34,8 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
     private TransactionTransition transactionTransition;
     private ArrayList<TransactionEntryTransition> transactionEntryTransitionsCart;
     private ConfirmationListAdapter productListAdapter;
+    private ArrayList<Product> products; //products from server
+    private ArrayList<Product> updatedProducts; //products with updated count
     private double totPrice;
 
 
@@ -40,15 +44,14 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation_screen);
 
+        products = new ArrayList<>();
+        updatedProducts = new ArrayList<>();
+        (new QueryProductsTask()).execute();
+
         transactionTransition = getIntent().getParcelableExtra("intent_extra_transition");
         transactionEntryTransitionsCart = getIntent().getParcelableArrayListExtra("transactionEntryCart");
 
-
-        //Toast.makeText(ConfirmationScreenActivity.this, productsInCart.toString(), Toast.LENGTH_SHORT).show();
-        //Toast.makeText(ConfirmationScreenActivity.this, transactionEntryTransitionsCart.toString(), Toast.LENGTH_SHORT).show();
         ListView confirmationListView = findViewById(R.id.confirmationListView);
-
-
         productListAdapter = new ConfirmationListAdapter(this, transactionEntryTransitionsCart);
         confirmationListView.setAdapter(productListAdapter);
 
@@ -57,8 +60,6 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         updateTransaction();
         totalPriceTextView.setText("Total price: $" + getTotalPrice());
 
-        Log.i(TAG, "onCreate: " + transactionTransition.getRecordId() + " " + transactionTransition.getCashierId() + " " + transactionTransition.getCreatedOn() + " " + transactionTransition.getTotalAmount() + " " + transactionTransition.getTotalItemSold() + "***************************************");
-        Log.i(TAG, "onCreate: s" + transactionEntryTransitionsCart.get(0).getQuantity() + "s *************************************************");
     }
 
     private double getTotalPrice() {
@@ -79,6 +80,20 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         transactionTransition.setTotalAmount(totPrice);
         //transactionTransition.setTransactionType();
         transactionTransition.setTotalItemSold(totalItemSold);
+    }
+
+    //update the product counts
+    private void updateProductCount() {
+        Log.i(TAG, "updateProductCount: *************1000000000000*******");
+        for (Product product : products) {
+            for (TransactionEntryTransition temp : transactionEntryTransitionsCart) {
+                if (product.getLookupCode().equals(temp.getLookupCode())) {
+                    int newCount = product.getCount() - temp.getQuantity();
+                    product.setCount(newCount);
+                    updatedProducts.add(product);
+                }
+            }
+        }
     }
 
     public void confirmOrderButton(View view) {
@@ -104,21 +119,17 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
             for (int i = 0; i < transactionEntryTransitionsCart.size(); i++) {
                 TransactionEntry transactionEntry = (new TransactionEntry(ConfirmationScreenActivity.this.transactionEntryTransitionsCart.get(i)));
                 transactionEntry.setTransactionReferenceId(transactionTransition.getRecordId());
-                Log.i(TAG, "doInBackground: transaction Reference id" + transactionEntry.getTransactionReferenceId()  + "******************************************");
+                Log.i(TAG, "doInBackground: transaction Reference id" + transactionEntry.getTransactionReferenceId() + "******************************************");
                 ApiResponse<TransactionEntry> apiResponseCart = (new TransactionEntryService()).createTransactionEntry(transactionEntry);
                 if (apiResponseCart.isValidResponse()) {
                     Log.i(TAG, "doInBackground: TransactionEntry successfully sent to the server");
                 }
+
+                ApiResponse<Product> apiResponseUpdatedProductInventory = (new ProductService()).updateProduct(updatedProducts.get(i));
+                if (apiResponseUpdatedProductInventory.isValidResponse()) {
+                    Log.i(TAG, "doInBackground: Product successfully updated");
+                }
             }
-
-
-            //testing. must send the entire transaction entry array in the actual implementation
-            //TransactionEntry transactionEntry = (new TransactionEntry(ConfirmationScreenActivity.this.transactionEntryTransitionsCart.get(0)));
-            // Log.i(TAG, "doInBackground: TransactionEntry id = " + transactionEntry.getRecordId().toString() + "////////");
-            //transactionEntry.setRecordId(null);
-            //ApiResponse<TransactionEntry> apiResponseCart = (new TransactionEntryService()).createTransactionEntry(transactionEntry);
-
-
 
             Log.i(TAG, "doInBackground: " + transactionTransition.getRecordId() + transactionTransition.getCashierId() + transactionTransition.getTotalAmount() + "******************************************");
             ApiResponse<Transaction> apiResponse = (new TransactionService()).updateTransaction(transaction);
@@ -139,6 +150,29 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    private class QueryProductsTask extends AsyncTask<Void, Void, ApiResponse<List<Product>>> {
+        @Override
+        protected ApiResponse<List<Product>> doInBackground(Void... params) {
+            ApiResponse<List<Product>> apiResponse = (new ProductService()).getProducts();
+
+            if (apiResponse.isValidResponse()) {
+
+                products.clear();
+                products.addAll(apiResponse.getData());
+                Log.i(TAG, "doInBackground: successfully queried products*********************");
+            }
+
+            return apiResponse;
+        }
+
+        @Override
+        protected void onPostExecute(ApiResponse<List<Product>> listApiResponse) {
+            updateProductCount();
+
+        }
     }
 
 
