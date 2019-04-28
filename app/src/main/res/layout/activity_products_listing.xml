@@ -30,7 +30,7 @@
         android:onClick="productListNextFAB"
         android:layout_gravity="center|bottom"
         android:layout_margin="20dp"
-        android:src="@drawable/ic_arrow_forward_white_24dp"
+        android:src="@drawable/ic_shopping_cart_black_24dp"
     />
 
 
