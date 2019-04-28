@@ -23,7 +23,10 @@
             android:layout_height="match_parent"
             android:padding="34dp"
             android:orientation="vertical">
-
+            <ImageView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_shopping_basket_black_72dp"/>
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
@@ -36,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:backgroundTint="#0298FF"
+                android:backgroundTint="#48cc19"
                 android:onClick="returnToMain"
                 android:clickable="true"
                 android:foreground="?attr/selectableItemBackground"
