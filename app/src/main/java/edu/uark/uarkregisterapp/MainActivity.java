@@ -4,19 +4,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Locale;
 
 import edu.uark.uarkregisterapp.models.transition.EmployeeTransition;
 
 public class MainActivity extends AppCompatActivity {
-
     private static final String TAG = "MainActivity";
     private EmployeeTransition employeeTransition;
+    private TextToSpeech textToSpeech;
 
 
     @Override
@@ -27,6 +31,39 @@ public class MainActivity extends AppCompatActivity {
 
         this.employeeTransition = this.getIntent().getParcelableExtra(this.getString(R.string.intent_extra_employee));
 
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int res = textToSpeech.setLanguage(Locale.ENGLISH);
+                    if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Toast.makeText(MainActivity.this, "Language not supported", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "init unsucessful", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        speak();
+    }
+
+    public void speak() {
+        String message = "Welcome " + this.employeeTransition.getFirstName() + ". to UARK Register App";
+        if (message.isEmpty())
+            Toast.makeText(MainActivity.this, "Enter message first", Toast.LENGTH_SHORT).show();
+        else
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+       /// textToSpeech.setSpeechRate()
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 
     @Override
