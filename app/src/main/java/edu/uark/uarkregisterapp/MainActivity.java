@@ -72,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        this.getEmployeeWelcomeTextView().setText("Welcome " + this.employeeTransition.getFirstName() + " (" + this.employeeTransition.getEmployeeId() + ")!");
+        TextView employeeFirstName = findViewById(R.id.text_view_employee_welcome);
+        employeeFirstName.setText(this.employeeTransition.getFirstName());
+        TextView employeeIdTextView = findViewById(R.id.text_view_employee_id);
+        employeeIdTextView.setText(this.employeeTransition.getEmployeeId());
     }
 
     public void beginTransactionButtonOnClick(View view) {
@@ -105,10 +108,6 @@ public class MainActivity extends AppCompatActivity {
     public void logOutButtonOnClick(View view) {
         this.startActivity(new Intent(getApplicationContext(), LandingActivity.class));
         speak("Logging out");
-    }
-
-    private TextView getEmployeeWelcomeTextView() {
-        return (TextView) this.findViewById(R.id.text_view_employee_welcome);
     }
 
     private void displayFunctionalityNotAvailableDialog() {

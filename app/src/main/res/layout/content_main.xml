@@ -12,13 +12,60 @@
     tools:context="edu.uark.uarkregisterapp.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:id="@+id/text_view_employee_welcome"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp"
-        android:textSize="25sp" />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_view_employee_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+
+            android:layout_toLeftOf="@id/profile_image"
+            android:text="Name"
+            android:textSize="23sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/profile_image"
+            app:layout_constraintHorizontal_bias="0.83"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.511" />
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+
+            android:src="@drawable/ic_account_circle_black_72dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/text_view_employee_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+
+            android:layout_toRightOf="@id/profile_image"
+            android:text="00000"
+            android:textSize="23sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.17"
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.511" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <GridLayout
         android:layout_width="match_parent"
@@ -29,9 +76,9 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_rowWeight="1"
-            android:backgroundTint="#0298FF"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
+            android:backgroundTint="#0298FF"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
@@ -45,9 +92,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="8dp"
-                android:textColor="#ffffff"
                 android:text="@string/button_begin_transaction"
                 android:textAlignment="center"
+                android:textColor="#ffffff"
                 android:textSize="20sp" />
         </android.support.v7.widget.CardView>
 
@@ -109,12 +156,12 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
+            android:backgroundTint="#0298FF"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:onClick="createEmployeeButtonOnClick"
 
-            android:backgroundTint="#0298FF"
+            android:onClick="createEmployeeButtonOnClick"
 
             android:stateListAnimator="@animator/elevate_button"
             app:cardCornerRadius="14dp"
@@ -140,12 +187,12 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
+            android:backgroundTint="#0298FF"
             android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
 
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:onClick="logOutButtonOnClick"
-            android:backgroundTint="#0298FF"
 
             android:stateListAnimator="@animator/elevate_button"
             app:cardCornerRadius="14dp"
@@ -156,10 +203,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="8dp"
-                android:textColor="#ffffff"
-
                 android:text="@string/button_log_out"
+
                 android:textAlignment="center"
+                android:textColor="#ffffff"
                 android:textSize="20sp" />
         </android.support.v7.widget.CardView>
     </GridLayout>

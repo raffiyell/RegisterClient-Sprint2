@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:backgroundTint="#48cc19"
+                android:backgroundTint="#4C9B32"
                 android:onClick="returnToMain"
                 android:clickable="true"
                 android:foreground="?attr/selectableItemBackground"

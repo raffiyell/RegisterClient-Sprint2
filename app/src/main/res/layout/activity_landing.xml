@@ -8,7 +8,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#2c2d98"
+    android:background="#F5F5F5"
     tools:context="edu.uark.uarkregisterapp.LandingActivity">
 
     <android.support.v7.widget.CardView
