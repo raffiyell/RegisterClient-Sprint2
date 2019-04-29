@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-
+android:textColor="@color/textColorOne"
             android:layout_toLeftOf="@id/profile_image"
             android:text="Name"
             android:textSize="23sp"
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-
+            android:textColor="@color/textColorOne"
             android:layout_toRightOf="@id/profile_image"
             android:text="00000"
             android:textSize="23sp"
@@ -78,7 +78,7 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:backgroundTint="#0298FF"
+
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
@@ -92,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-
+                android:background="@drawable/gradient_three"
                 android:padding="8dp">
 
                 <ImageView
@@ -123,6 +123,7 @@
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
+
             android:onClick="productSalesReportButtonOnClick"
             android:stateListAnimator="@animator/elevate_button"
             app:cardCornerRadius="14dp"
@@ -134,14 +135,14 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-
+                android:background="@drawable/gradient_one"
                 android:padding="8dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_local_offer_white_48dp" />
+                    android:src="@drawable/ic_local_offer_white_24dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -149,6 +150,7 @@
                     android:layout_gravity="center"
                     android:text="@string/button_product_sales_report"
                     android:textAlignment="center"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -163,6 +165,7 @@
             android:layout_margin="8dp"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
+            android:backgroundTint="#FF8E4B"
 
             android:gravity="center"
             android:onClick="cashierSalesReportButtonOnClick"
@@ -175,19 +178,20 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:padding="8dp"
+                android:background="@drawable/gradient_one"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_receipt_black_24dp" />
+                    android:src="@drawable/ic_receipt_white_24dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-
+android:textColor="@color/white"
                     android:text="@string/button_cashier_sales_report"
                     android:textAlignment="center"
                     android:textSize="16sp" />
@@ -201,7 +205,7 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:backgroundTint="#0298FF"
+            android:backgroundTint="#4D719E"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
@@ -217,6 +221,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:padding="8dp"
+                android:background="@drawable/gradient_three"
                 android:orientation="vertical">
 
                 <ImageView
@@ -244,7 +249,7 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_margin="8dp"
-            android:backgroundTint="#0298FF"
+            android:backgroundTint="#4D719E"
             android:clickable="true"
 
             android:foreground="?attr/selectableItemBackground"
@@ -260,6 +265,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:padding="8dp"
+                android:background="@drawable/gradient_three"
                 android:orientation="vertical">
 
                 <ImageView

@@ -54,6 +54,7 @@ public class ProductsListingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_products_listing);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
+        getSupportActionBar().hide();
         createTransaction();
 
         this.products = new ArrayList<>(); //products in inventory

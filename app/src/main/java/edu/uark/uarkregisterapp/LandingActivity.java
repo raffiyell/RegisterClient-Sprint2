@@ -30,6 +30,8 @@ public class LandingActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_landing);
 
+		getSupportActionBar().hide();
+
 		textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
 			@Override
 			public void onInit(int status) {

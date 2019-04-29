@@ -50,6 +50,8 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
         updatedProducts = new ArrayList<>();
         (new QueryProductsTask()).execute();
 
+        getSupportActionBar().hide();
+
         transactionTransition = getIntent().getParcelableExtra("intent_extra_transition");
         transactionEntryTransitionsCart = getIntent().getParcelableArrayListExtra("transactionEntryCart");
 

@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
+
+        getSupportActionBar().hide();
+
         this.employeeTransition = this.getIntent().getParcelableExtra(this.getString(R.string.intent_extra_employee));
 
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
