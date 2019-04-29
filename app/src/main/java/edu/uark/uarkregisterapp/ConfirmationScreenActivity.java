@@ -90,7 +90,7 @@ public class ConfirmationScreenActivity extends AppCompatActivity {
 
 
     private void speak(){
-        String message = "Your transaction has been completed successfully ";
+        String message = "The total is " + totPrice + " dollars. Your transaction has been completed ";
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
 
     }

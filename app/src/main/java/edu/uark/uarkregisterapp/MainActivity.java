@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Language not supported", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "init unsucessful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "init unsuccessful", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null);
             /// textToSpeech.setSpeechRate()
-            Toast.makeText(MainActivity.this, "blabla voice", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "speaking", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         TextView employeeFirstName = findViewById(R.id.text_view_employee_welcome);
-        employeeFirstName.setText(this.employeeTransition.getFirstName());
+        employeeFirstName.setText(this.employeeTransition.getFirstName().substring(0, 1).toUpperCase() + this.employeeTransition.getFirstName().substring(1));
         TextView employeeIdTextView = findViewById(R.id.text_view_employee_id);
         employeeIdTextView.setText(this.employeeTransition.getEmployeeId());
     }

@@ -28,7 +28,9 @@
             android:name=".ProductsListingActivity"
             android:label="@string/title_activity_products_listing"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.uark.uarkregisterapp.LandingActivity" />

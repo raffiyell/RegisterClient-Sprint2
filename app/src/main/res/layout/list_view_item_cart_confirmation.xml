@@ -41,73 +41,75 @@
                     android:text="@string/text_view_products_lookup_code"
                     android:textSize="18sp" />
 
+                <!--
+                             <android.support.v7.widget.CardView
+                                 android:id="@+id/removeProductConfirmationCardView"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_gravity="end"
+                                 android:backgroundTint="#CA5A5A"
+                                 android:clickable="true"
+                                 android:elevation="8dp"
+                                 android:foreground="?attr/selectableItemBackground"
+                                 android:gravity="center"
+                                 android:stateListAnimator="@a/elevate_button"
+                                 app:cardCornerRadius="16dp"
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/removeProductConfirmationCardView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:backgroundTint="#CA5A5A"
-                    android:clickable="true"
-                    android:elevation="8dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:stateListAnimator="@animator/elevate_button"
-                    app:cardCornerRadius="16dp"
+                                 app:cardUseCompatPadding="true">
 
-                    app:cardUseCompatPadding="true">
+                                 <ImageView
+                                     android:layout_width="24dp"
+                                     android:layout_height="24dp"
+                                     android:layout_margin="4dp"
+                                     android:src="@drawable/ic_close_white_24dp" />
+                             </android.support.v7.widget.CardView>
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_margin="4dp"
-                        android:src="@drawable/ic_close_white_24dp" />
-                </android.support.v7.widget.CardView>
-            </LinearLayout>
+                             -->
+                         </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginBottom="14dp"
-                android:gravity="end|center_vertical"
-                android:orientation="horizontal">
+                         <LinearLayout
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:layout_marginTop="6dp"
+                             android:layout_marginRight="4dp"
+                             android:layout_marginBottom="14dp"
+                             android:gravity="end|center_vertical"
+                             android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/list_view_item_price_confirmation"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="18dp"
-                    android:layout_weight="3"
-                    android:text="Price: 0"
-                    android:textAlignment="textEnd"
-                    android:textSize="18sp" />
-
-
-                <TextView
-                    android:id="@+id/list_view_item_quantity_confirmation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="18dp"
-                    android:text="Qty: 0"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/list_view_item_total_price_confirmation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="18dp"
-
-                    android:text="Total: $0.00 "
-
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-        </LinearLayout>
+                             <TextView
+                                 android:id="@+id/list_view_item_price_confirmation"
+                                 android:layout_width="0dp"
+                                 android:layout_height="fill_parent"
+                                 android:layout_marginRight="18dp"
+                                 android:layout_weight="3"
+                                 android:text="Price: 0"
+                                 android:textAlignment="textEnd"
+                                 android:textSize="18sp" />
 
 
-    </android.support.v7.widget.CardView>
+                             <TextView
+                                 android:id="@+id/list_view_item_quantity_confirmation"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_marginRight="18dp"
+                                 android:text="Qty: 0"
+                                 android:textSize="18sp" />
+
+                             <TextView
+                                 android:id="@+id/list_view_item_total_price_confirmation"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_marginRight="18dp"
+
+                                 android:text="Total: $0.00 "
+
+                                 android:textSize="18sp" />
+                         </LinearLayout>
+
+                     </LinearLayout>
 
 
-</LinearLayout>
+                 </android.support.v7.widget.CardView>
+
+
+             </LinearLayout>
