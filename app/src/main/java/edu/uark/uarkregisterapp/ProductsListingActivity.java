@@ -16,12 +16,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import edu.uark.uarkregisterapp.adapters.ProductListAdapter;
 import edu.uark.uarkregisterapp.models.api.ApiResponse;
 import edu.uark.uarkregisterapp.models.api.Product;
 import edu.uark.uarkregisterapp.models.api.Transaction;
+import edu.uark.uarkregisterapp.models.api.TransactionEntry;
 import edu.uark.uarkregisterapp.models.api.services.ProductService;
 import edu.uark.uarkregisterapp.models.api.services.TransactionService;
 import edu.uark.uarkregisterapp.models.transition.EmployeeTransition;
@@ -115,6 +117,9 @@ public class ProductsListingActivity extends AppCompatActivity {
             startActivity(confirmationPage);
         }
     }
+
+
+
 
     ///////////////////////////////////////// In progress {
     private class searchingTask extends AsyncTask<Void, Void, ApiResponse<Product>> {

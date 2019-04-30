@@ -92,8 +92,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void productSalesReportButtonOnClick(View view) {
-        this.displayFunctionalityNotAvailableDialog();
+
+
         speak("report: product");
+
+        Intent reportProduct = new Intent(MainActivity.this, ReportProductActivity.class);
+        startActivity(reportProduct);
     }
 
     public void cashierSalesReportButtonOnClick(View view) {
