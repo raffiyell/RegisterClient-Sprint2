@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:cardUseCompatPadding="true"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center|center_horizontal"
+        android:padding="24dp"
+        android:stateListAnimator="@animator/elevate_button"
+        app:cardCornerRadius="12dp"
+        >
+
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/gradient_three"
+            android:id="@+id/text_view_product_lookup_code_report"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/textColorOne"
+            android:text="00000"/>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

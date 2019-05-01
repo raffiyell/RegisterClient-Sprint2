@@ -34,8 +34,6 @@ public class ReportCashierActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_cashier);
 
-        getSupportActionBar().hide();
-
         transactions = new ArrayList<>();
         (new RetrieveTransactionTask()).execute();
 
