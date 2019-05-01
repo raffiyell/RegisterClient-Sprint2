@@ -31,10 +31,9 @@ public class CreateEmployeeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_employee);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        ActionBar actionBar = this.getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+
+        getSupportActionBar().hide();
+
     }
 
     @Override

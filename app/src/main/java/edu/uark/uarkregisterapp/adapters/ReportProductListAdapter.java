@@ -39,7 +39,7 @@ public class ReportProductListAdapter extends ArrayAdapter<String> {
 
         if (lookupcode != null && !lookupcode.isEmpty()) {
             TextView cashierIdTextView = (TextView) view.findViewById(R.id.text_view_product_lookup_code_report);
-            cashierIdTextView.setText( lookupcode + " sold " + currentProductSold + " items");
+            cashierIdTextView.setText(lookupcode + " sold " + (currentProductSold - 1) + " items"); //subtracting 1 is a temporary fix. not the right way
         }
 
         return view;

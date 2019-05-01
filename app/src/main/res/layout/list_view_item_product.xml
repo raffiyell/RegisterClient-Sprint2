@@ -17,7 +17,7 @@
         app:cardCornerRadius="12dp">
 
         <LinearLayout
-            android:background="@drawable/gradient_one"
+            android:background="@drawable/gradient_five"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="6dp"

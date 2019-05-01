@@ -55,7 +55,11 @@ android:textColor="@color/textColorOne"
                 android:gravity="center"
                 app:cardCornerRadius="18dp"
                 app:cardUseCompatPadding="true">
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_four"
+                    android:gravity="center">
                 <EditText
                     android:id="@+id/edit_text_employee_id"
                     android:layout_width="match_parent"
@@ -68,6 +72,7 @@ android:textColor="@color/textColorOne"
                     android:hint="@string/text_view_sign_in_employee_id"
                     android:inputType="text"
                     android:textAlignment="center" />
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -78,6 +83,11 @@ android:textColor="@color/textColorOne"
                 android:gravity="center"
                 app:cardCornerRadius="18dp"
                 app:cardUseCompatPadding="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_four"
+                    android:gravity="center">
 
                 <EditText
                     android:id="@+id/edit_text_password"
@@ -92,7 +102,7 @@ android:textColor="@color/textColorOne"
                     android:hint="@string/text_view_sign_in_password"
                     android:inputType="textPassword"
                     android:textAlignment="center" />
-
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
