@@ -36,6 +36,8 @@ public class ProductsListingActivity extends AppCompatActivity {
     private static final String TAG = "ProductsListingActivity";
     private EditText searchEditText;
 
+    private List<Product> products;
+    private ProductListAdapter productListAdapter;
     private ArrayList<TransactionEntryTransition> transactionEntriesTransition; //this will be the cart arraylist.
     private Transaction transaction;
 
@@ -264,7 +266,4 @@ public class ProductsListingActivity extends AppCompatActivity {
         }
     }
 
-
-    private List<Product> products;
-    private ProductListAdapter productListAdapter;
 }

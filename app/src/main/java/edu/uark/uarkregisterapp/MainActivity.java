@@ -92,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void productSalesReportButtonOnClick(View view) {
-
-
         speak("report: product");
 
         Intent reportProduct = new Intent(MainActivity.this, ReportProductActivity.class);
@@ -101,14 +99,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cashierSalesReportButtonOnClick(View view) {
-        this.displayFunctionalityNotAvailableDialog();
-
         speak("report: cashier");
+        Intent reportCashier = new Intent(MainActivity.this, ReportCashierActivity.class);
+        startActivity(reportCashier);
     }
 
     public void createEmployeeButtonOnClick(View view) {
         startActivity(new Intent(getApplicationContext(), CreateEmployeeActivity.class));
-
         speak("Please fill out the appropriate employee information");
     }
 
