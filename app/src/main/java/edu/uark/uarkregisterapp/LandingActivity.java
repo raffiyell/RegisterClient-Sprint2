@@ -32,6 +32,7 @@ public class LandingActivity extends AppCompatActivity {
 
 		getSupportActionBar().hide();
 
+		Toast.makeText(LandingActivity.this, "ID = 260. Password = 12345", Toast.LENGTH_SHORT).show();
 		textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
 			@Override
 			public void onInit(int status) {
